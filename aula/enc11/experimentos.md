@@ -27,6 +27,8 @@ $B = "Authorization: Bearer tok-burica"
 
 No macOS e no Linux: `A="Authorization: Bearer tok-alvorada"` (sem `$` e sem espaços em volta do `=`), o mesmo para `B`, e `curl` no lugar de `curl.exe`.
 
+**Apareceu `curl: (2) no URL specified`?** As duas linhas acima não foram coladas **neste** terminal. Cada terminal novo precisa delas de novo.
+
 Algum comando deu "conexão recusada"? Veja "Se der errado" no `README.md` da raiz do repositório.
 
 ## 1 — Seguir uma requisição

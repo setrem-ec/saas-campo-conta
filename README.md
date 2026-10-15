@@ -130,6 +130,7 @@ docker compose down -v     # desliga e volta aos dados de exemplo
 | `error during connect` ou `connection refused` no docker | Docker Desktop fechado | Abrir, esperar ficar verde, repetir |
 | A primeira subida falha no meio | Sem internet, ou rede que bloqueia downloads | Tentar em outra rede; repetir o `up` |
 | `port is already allocated`, `Ports are not available` ou `Only one usage of each socket address` | Outro programa usa a 8080 ou a 8081 | Em `compose.yaml`, trocar `127.0.0.1:8080:8080` por `127.0.0.1:9080:8080` (só o número do meio), rodar `docker compose up -d` de novo e usar 9080 no lugar de 8080 em todos os comandos, inclusive os de `aula/enc11/experimentos.md`. Se a ocupada for a 8081, o mesmo com `127.0.0.1:9081:8081` |
+| `curl: (2) no URL specified` | `$A` ou `$B` não existe neste terminal (cada terminal novo começa sem elas) | Colar de novo as duas linhas `$A = ...` e `$B = ...` do início de `aula/enc11/experimentos.md` |
 | `{"erro":"token ausente ou invalido"}` | Faltou o cabeçalho, ou o token foi digitado errado | Copiar o comando inteiro; os tokens não têm acento |
 | `curl` responde conexão recusada (`Failed to connect` ou `Connection refused`) | O gateway parou (`docker compose ps` não mostra o `gateway`). Um endereço terminado em duas barras, como `http://localhost:8080//`, faz isso | `docker compose up -d gateway` e repetir o comando |
 | `{"erro":"servico indisponivel"}` | Um serviço caiu | `docker compose ps` e `docker compose up -d` |
