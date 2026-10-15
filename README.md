@@ -12,7 +12,10 @@
 
 No Windows, use `curl.exe` (com `.exe`). No macOS e no Linux, `curl`.
 
+Primeiro, uma pasta da disciplina, onde ficam lado a lado este repositório, o do seu PI e as demos das aulas (no macOS e no Linux: `mkdir -p ~/saas-lab && cd ~/saas-lab`):
+
 ```powershell
+mkdir $HOME\saas-lab ; cd $HOME\saas-lab
 git clone https://github.com/setrem-ec/saas-campo-conta.git
 cd saas-campo-conta
 docker compose up -d --build
