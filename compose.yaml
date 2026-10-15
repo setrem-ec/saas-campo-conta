@@ -1,0 +1,53 @@
+# CampoConta de referencia - 3 servicos, 2 bancos, 1 porta de entrada.
+#   8080 = o produto (tudo passa pelo gateway)
+#   8081 = painel do laboratorio (chaves dos experimentos; nao faz parte do produto)
+# Senhas "lab" sao de bancada: nada aqui sai da sua maquina.
+services:
+  producao-db:
+    image: postgres:16-alpine
+    environment: { POSTGRES_PASSWORD: lab, POSTGRES_DB: producao }
+    volumes: ["./producao/init.sql:/docker-entrypoint-initdb.d/init.sql:ro"]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U postgres -d producao"], interval: 2s, timeout: 2s, retries: 30 }
+
+  cobranca-db:
+    image: postgres:16-alpine
+    environment: { POSTGRES_PASSWORD: lab, POSTGRES_DB: cobranca }
+    volumes: ["./cobranca/init.sql:/docker-entrypoint-initdb.d/init.sql:ro"]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U postgres -d cobranca"], interval: 2s, timeout: 2s, retries: 30 }
+
+  producao:
+    build: .
+    image: campoconta-base
+    command: ["node", "/app/producao/server.js"]
+    volumes: ["./producao:/app/producao:ro", "./comum:/app/comum:ro"]
+    environment: { DB_HOST: producao-db, COBRANCA_URL: "http://cobranca:3000" }
+    depends_on: { producao-db: { condition: service_healthy } }
+    stop_grace_period: 1s
+
+  cobranca:
+    build: .
+    image: campoconta-base
+    command: ["node", "/app/cobranca/server.js"]
+    volumes: ["./cobranca:/app/cobranca:ro", "./comum:/app/comum:ro"]
+    environment: { DB_HOST: cobranca-db }
+    depends_on: { cobranca-db: { condition: service_healthy }, producao: { condition: service_started } }
+    stop_grace_period: 1s
+
+  gateway:
+    build: .
+    image: campoconta-base
+    command: ["node", "/app/gateway/server.js"]
+    volumes: ["./gateway:/app/gateway:ro", "./comum:/app/comum:ro"]
+    environment: { PRODUCAO_URL: "http://producao:3000", COBRANCA_URL: "http://cobranca:3000" }
+    ports: ["127.0.0.1:8080:8080", "127.0.0.1:8081:8081"]
+    depends_on: [producao, cobranca]
+    stop_grace_period: 1s
+
+  # So sobe quando chamado: docker compose run --rm ferramentas node <script>.js
+  ferramentas:
+    build: .
+    image: campoconta-base
+    profiles: ["ferramentas"]
+    working_dir: /app/ferramentas
+    volumes: ["./ferramentas:/app/ferramentas:ro", "./comum:/app/comum:ro"]
+    environment: { GATEWAY_URL: "http://gateway:8080", PAINEL_URL: "http://gateway:8081" }
