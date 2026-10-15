@@ -108,7 +108,7 @@ Chaves que desligam uma defesa, para você ver o que ela evita. Não fazem parte
 ## O que ficou de fora, de propósito
 
 - **Login de verdade.** O token é fixo.
-- **Broker de mensagens.** Produtos de mensageria gerenciados são assunto de Cloud Computing.
+- **Broker de mensagens.** A fila é uma tabela (a `outbox`), porque há um produtor e um consumidor. Quando trocar a tabela por um broker é decisão de arquitetura, discutida em `aula/enc11/o-que-e-microsservico.md`. Operar um broker gerenciado é assunto de Cloud Computing.
 - **Os contextos Associados e Relatórios** do mapa do Encontro 08. Dois serviços de domínio bastam para mostrar a conversa.
 - **Testes automatizados e pipeline.** Entram na Unidade 4, sobre este mesmo sistema.
 - **Kubernetes.** O Compose é só a bancada.

@@ -6,7 +6,8 @@
 ## Checklist de entrega
 
 - [ ] **Commit 1, `previsoes`:** partes 1 e 2 preenchidas, com push, até 20h05 e **antes** de rodar qualquer comando dos experimentos 2 a 6.
-- [ ] **Commit 2, `observacoes`:** parte 3 preenchida, com push, antes da chamada de fechamento (21h35).
+- [ ] **Commit 2, `observacoes`:** parte 3 preenchida, com push, até 20h55.
+- [ ] **Leitura, 20h55 às 21h15:** `o-que-e-microsservico.md`, nesta mesma pasta (aparece no repositório às 20h50: rode `git pull` no clone do CampoConta).
 - [ ] **Commit 3, `reescrita`:** parte 4 preenchida, com push, logo depois da chamada de fechamento.
 - [ ] **Até sábado, 17/10, 23h59:** `docs/servicos-rascunho.md` da sua unidade de PI (ver `experimentos.md`, "Ao terminar").
 

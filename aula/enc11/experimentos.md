@@ -176,7 +176,7 @@ docker compose run --rm ferramentas node inundar.js
 
 ## Ao terminar
 
-`docker compose down -v` volta aos dados de exemplo. Faça o commit `observacoes` (parte 3 do registro) com push.
+`docker compose down -v` volta aos dados de exemplo. Faça o commit `observacoes` (parte 3 do registro) com push, até 20h55. Depois, `git pull` neste repositório e leia `o-que-e-microsservico.md`, nesta mesma pasta, antes da chamada de fechamento (21h15).
 
 **Agora o seu produto (por unidade de PI; comece hoje se sobrar tempo, prazo no sábado).** Crie `docs/servicos-rascunho.md` no repositório do PI (um arquivo por unidade) com:
 
@@ -186,5 +186,6 @@ docker compose run --rm ferramentas node inundar.js
    - Onde o tenant é descoberto, e como chega ao segundo serviço?
    - Se alguém esquecer o filtro no código, o que segura o vazamento?
    - Se o segundo serviço cair, o que o usuário ainda consegue fazer?
+   - Das características de microsserviço (ver `o-que-e-microsservico.md`), qual cada um dos seus dois serviços cumpre, e qual não cumpre?
 
 "Ainda não sei" vale, desde que escrito: vira a pendência nº 1 da unidade até 29/10. Prazo do commit com push: **sábado, 17/10, 23h59**. É o rascunho do ADR de comunicação que a Etapa 2 pede.
