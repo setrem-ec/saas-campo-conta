@@ -1,12 +1,12 @@
 # Os seis experimentos — Encontro de 15/10
 
-**O que é:** os comandos e as perguntas dos experimentos do encontro de 15/10, que é **on-line**: chamada de abertura, experimentos por conta própria, cada um na sua máquina, e chamada de fechamento. **O que não é:** o lugar das respostas. Elas vão no `registro-enc11.md` (nesta mesma pasta), copiado para o repositório do seu PI como `docs/registro-enc11-<seu-primeiro-nome>.md`. Dúvida durante o encontro: no chat da chamada, que o professor responde por escrito.
+**O que é:** os comandos e as perguntas dos experimentos do encontro de 15/10: abertura (19h15), experimentos cada um na sua máquina e fechamento (21h15). Sem o sistema rodando, sente ao lado de quem tem; o registro continua individual. **O que não é:** o lugar das respostas. Elas vão no `registro-enc11.md` (nesta mesma pasta), copiado para o repositório do seu PI como `docs/registro-enc11-<seu-primeiro-nome>.md`. Dúvida: levante a mão; o professor circula.
 
 - [ ] Sistema no ar (passo "Antes do encontro" do `README.md` da raiz do repositório).
 - [ ] Dois terminais abertos na raiz do repositório (a pasta do `compose.yaml`): todos os comandos rodam de lá.
 - [ ] `registro-enc11.md` copiado para o repositório do seu PI como `docs/registro-enc11-<seu-primeiro-nome>.md` (um por aluno: com o nome, dois colegas não sobrescrevem um ao outro).
 
-**Regra:** cada experimento tem uma pergunta marcada **Previsão no registro**. A do experimento 1 você responde no chat da chamada de abertura, antes de o professor rodá-lo na tela, e depois copia para o registro. As outras cinco você responde no registro logo que a chamada de abertura terminar, faz o commit `previsoes` com push e **só então roda os experimentos 2 a 6**. Previsão errada vale; enviada depois de rodar, não. As outras perguntas são para pensar. A coluna "O nome disso" fecha na chamada de fechamento.
+**Regra:** cada experimento tem uma pergunta marcada **Previsão no registro**. A do experimento 1 você escreve no registro antes de o professor rodá-lo no projetor. As outras cinco você responde no registro logo que a abertura terminar, faz o commit `previsoes` com push e **só então roda os experimentos 2 a 6**. Previsão errada vale; enviada depois de rodar, não. As outras perguntas são para pensar. A coluna "O nome disso" fecha no fechamento.
 
 **Por que isso interessa ao seu projeto:** o produto que a sua equipe propôs no começo do semestre precisa chegar à Etapa 2 (29/10) com dois serviços no ar e um tenant sem enxergar o dado do outro. Cada experimento mostra uma decisão que você vai ter de tomar nele.
 
@@ -176,7 +176,7 @@ docker compose run --rm ferramentas node inundar.js
 
 ## Ao terminar
 
-`docker compose down -v` volta aos dados de exemplo. Faça o commit `observacoes` (parte 3 do registro) com push, até 20h55. Depois, `git pull` neste repositório e leia `o-que-e-microsservico.md`, nesta mesma pasta, antes da chamada de fechamento (21h15).
+`docker compose down -v` volta aos dados de exemplo. Faça o commit `observacoes` (parte 3 do registro) com push, até 20h55. Depois, `git pull` neste repositório e leia `o-que-e-microsservico.md`, nesta mesma pasta, antes do fechamento (21h15).
 
 **Agora o seu produto (por unidade de PI; comece hoje se sobrar tempo, prazo no sábado).** Crie `docs/servicos-rascunho.md` no repositório do PI (um arquivo por unidade) com:
 

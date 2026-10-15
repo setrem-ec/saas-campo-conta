@@ -3,7 +3,7 @@
 **Arquitetura de Software SAAS (8512) · EC7 · SETREM 2026-2**
 
 - **O que é:** o exemplo da disciplina rodando de verdade. Duas cooperativas (os tenants) usam o mesmo sistema, feito de três serviços que conversam.
-- **O que fazer:** hoje, 15/10, **antes da chamada de abertura (19h15)**, subir e conferir (seção "Antes do encontro") e colar a saída no canal. No encontro (on-line), os seis experimentos de `aula/enc11/experimentos.md`, com registro em `aula/enc11/registro-enc11.md`. Ler o código fica para depois.
+- **O que fazer:** hoje, 15/10, **antes do encontro (19h15)**, subir e conferir (seção "Antes do encontro") e colar a saída no canal. No encontro, os seis experimentos de `aula/enc11/experimentos.md`, com registro em `aula/enc11/registro-enc11.md`. Ler o código fica para depois.
 - **Pré-requisito:** Docker Desktop instalado e aberto, `git` e internet na primeira subida. Sem Docker funcionando? Siga o encontro mesmo assim: o `aula/enc11/registro-enc11.md` diz o que fazer.
 
 > **Isto não é o seu PI.** O CampoConta é material de aula. Copiar este código ou esta divisão de serviços para a Etapa 2 é avaliado como cópia de material de aula. Use-o para entender; a decisão do seu produto é sua.
