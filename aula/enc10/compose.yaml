@@ -1,0 +1,19 @@
+# compose.yaml - os dois servicos; SLOW_MS, TIMEOUT_MS, RETRIES e BREAKER vem do terminal
+services:
+  faturamento-svc:
+    image: node:20-alpine
+    command: ["node", "/app/faturamento.js"]
+    volumes: ["./faturamento.js:/app/faturamento.js:ro"]
+    environment: { SLOW_MS: "${SLOW_MS:-100}" }
+    stop_grace_period: 1s
+  pedidos:
+    image: node:20-alpine
+    command: ["node", "/app/pedidos.js"]
+    volumes: ["./pedidos.js:/app/pedidos.js:ro"]
+    environment:
+      ALVO: http://faturamento-svc:3000
+      TIMEOUT_MS: "${TIMEOUT_MS:-0}"
+      RETRIES: "${RETRIES:-0}"
+      BREAKER: "${BREAKER:-off}"
+    ports: ["30090:3000"]
+    stop_grace_period: 1s
