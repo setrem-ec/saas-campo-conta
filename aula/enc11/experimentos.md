@@ -1,10 +1,10 @@
 # Os seis experimentos — Encontro de 15/10
 
-**O que é:** os comandos e as perguntas dos experimentos do encontro de 15/10, que é **on-line**: chamada de abertura, experimentos por conta própria, cada um na sua máquina, e chamada de fechamento. **O que não é:** o lugar das respostas. Elas vão no `registro-enc11.md`, copiado para o repositório do seu PI. Dúvida durante o encontro: no chat da chamada, que o professor responde por escrito.
+**O que é:** os comandos e as perguntas dos experimentos do encontro de 15/10, que é **on-line**: chamada de abertura, experimentos por conta própria, cada um na sua máquina, e chamada de fechamento. **O que não é:** o lugar das respostas. Elas vão no `registro-enc11.md` (nesta mesma pasta), copiado para o repositório do seu PI como `docs/registro-enc11-<seu-primeiro-nome>.md`. Dúvida durante o encontro: no chat da chamada, que o professor responde por escrito.
 
-- [ ] Sistema no ar (passo "Antes do encontro" do `README.md`).
-- [ ] Dois terminais abertos na pasta do repositório.
-- [ ] `registro-enc11.md` copiado para `docs/` do seu PI.
+- [ ] Sistema no ar (passo "Antes do encontro" do `README.md` da raiz do repositório).
+- [ ] Dois terminais abertos na raiz do repositório (a pasta do `compose.yaml`): todos os comandos rodam de lá.
+- [ ] `registro-enc11.md` copiado para o repositório do seu PI como `docs/registro-enc11-<seu-primeiro-nome>.md` (um por aluno: com o nome, dois colegas não sobrescrevem um ao outro).
 
 **Regra:** cada experimento tem uma pergunta marcada **Previsão no registro**. A do experimento 1 você responde no chat da chamada de abertura, antes de o professor rodá-lo na tela, e depois copia para o registro. As outras cinco você responde no registro logo que a chamada de abertura terminar, faz o commit `previsoes` com push e **só então roda os experimentos 2 a 6**. Previsão errada vale; enviada depois de rodar, não. As outras perguntas são para pensar. A coluna "O nome disso" fecha na chamada de fechamento.
 
@@ -27,7 +27,7 @@ $B = "Authorization: Bearer tok-burica"
 
 No macOS e no Linux: `A="Authorization: Bearer tok-alvorada"` (sem `$` e sem espaços em volta do `=`), o mesmo para `B`, e `curl` no lugar de `curl.exe`.
 
-Algum comando deu "conexão recusada"? Veja "Se der errado" no `README.md`.
+Algum comando deu "conexão recusada"? Veja "Se der errado" no `README.md` da raiz do repositório.
 
 ## 1 — Seguir uma requisição
 
@@ -180,7 +180,7 @@ docker compose run --rm ferramentas node inundar.js
 
 **Agora o seu produto (por unidade de PI; comece hoje se sobrar tempo, prazo no sábado).** Crie `docs/servicos-rascunho.md` no repositório do PI (um arquivo por unidade) com:
 
-1. As caixas do seu produto, no formato das cinco caixas do CampoConta no `README.md`: a porta de entrada, os dois serviços e onde cada um guarda dado. Pode ser lista ou desenho em texto.
+1. As caixas do seu produto, no formato das cinco caixas do CampoConta no `README.md` da raiz do repositório: a porta de entrada, os dois serviços e onde cada um guarda dado. Pode ser lista ou desenho em texto.
 2. Uma linha para cada pergunta:
    - Qual é o segundo serviço, e o que ele recebe do primeiro?
    - Onde o tenant é descoberto, e como chega ao segundo serviço?

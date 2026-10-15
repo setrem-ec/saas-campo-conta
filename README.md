@@ -3,8 +3,8 @@
 **Arquitetura de Software SAAS (8512) · EC7 · SETREM 2026-2**
 
 - **O que é:** o exemplo da disciplina rodando de verdade. Duas cooperativas (os tenants) usam o mesmo sistema, feito de três serviços que conversam.
-- **O que fazer:** hoje, 15/10, **antes da chamada de abertura (19h15)**, subir e conferir (seção "Antes do encontro") e colar a saída no canal. No encontro (on-line), os seis experimentos de `experimentos.md`, com registro em `registro-enc11.md`. Ler o código fica para depois.
-- **Pré-requisito:** Docker Desktop instalado e aberto, `git` e internet na primeira subida. Sem Docker funcionando? Siga o encontro mesmo assim: o `registro-enc11.md` diz o que fazer.
+- **O que fazer:** hoje, 15/10, **antes da chamada de abertura (19h15)**, subir e conferir (seção "Antes do encontro") e colar a saída no canal. No encontro (on-line), os seis experimentos de `aula/enc11/experimentos.md`, com registro em `aula/enc11/registro-enc11.md`. Ler o código fica para depois.
+- **Pré-requisito:** Docker Desktop instalado e aberto, `git` e internet na primeira subida. Sem Docker funcionando? Siga o encontro mesmo assim: o `aula/enc11/registro-enc11.md` diz o que fazer.
 
 > **Isto não é o seu PI.** O CampoConta é material de aula. Copiar este código ou esta divisão de serviços para a Etapa 2 é avaliado como cópia de material de aula. Use-o para entender; a decisão do seu produto é sua.
 
@@ -21,9 +21,18 @@ curl.exe -H "Authorization: Bearer tok-alvorada" http://localhost:8080/eu
 
 Deu certo se voltar `{"tenant":"alvorada","usuario":"ana"}`. A primeira subida baixa imagens e instala uma biblioteca: leva alguns minutos e precisa de internet. As seguintes levam cerca de 10 segundos.
 
-Pare aqui. O resto se faz no encontro, com `experimentos.md`: quem roda antes perde a previsão, que é a parte que ensina.
+Pare aqui. O resto se faz no encontro, com `aula/enc11/experimentos.md`: quem roda antes perde a previsão, que é a parte que ensina.
 
-**Já mexeu no sistema antes?** Comece com `docker compose down -v`. Os números de `experimentos.md` (entrega 1 da Alvorada, entrega 2 da Buricá) valem para os dados de exemplo.
+**Já mexeu no sistema antes?** Comece com `docker compose down -v`. Os números de `aula/enc11/experimentos.md` (entrega 1 da Alvorada, entrega 2 da Buricá) valem para os dados de exemplo.
+
+## O que está em cada pasta
+
+| Pasta | O que é |
+|---|---|
+| `gateway/`, `producao/`, `cobranca/`, `comum/` | O produto: um diretório por serviço, mais o código que os três compartilham |
+| `compose.yaml`, `Dockerfile` | O ambiente que sobe tudo |
+| `ferramentas/` | Scripts do laboratório (não fazem parte do produto) |
+| `aula/` | Material dos encontros, uma pasta por encontro (não faz parte do produto) |
 
 ## O desenho
 
@@ -117,9 +126,9 @@ docker compose down -v     # desliga e volta aos dados de exemplo
 |---|---|---|
 | `error during connect` ou `connection refused` no docker | Docker Desktop fechado | Abrir, esperar ficar verde, repetir |
 | A primeira subida falha no meio | Sem internet, ou rede que bloqueia downloads | Tentar em outra rede; repetir o `up` |
-| `port is already allocated` | Outro programa usa a 8080 ou a 8081 | Em `compose.yaml`, trocar `127.0.0.1:8080:8080` por `127.0.0.1:9080:8080` (só o número do meio), rodar `docker compose up -d` de novo e usar 9080 no lugar de 8080 em todos os comandos, inclusive os de `experimentos.md`. Se a ocupada for a 8081, o mesmo com `127.0.0.1:9081:8081` |
+| `port is already allocated`, `Ports are not available` ou `Only one usage of each socket address` | Outro programa usa a 8080 ou a 8081 | Em `compose.yaml`, trocar `127.0.0.1:8080:8080` por `127.0.0.1:9080:8080` (só o número do meio), rodar `docker compose up -d` de novo e usar 9080 no lugar de 8080 em todos os comandos, inclusive os de `aula/enc11/experimentos.md`. Se a ocupada for a 8081, o mesmo com `127.0.0.1:9081:8081` |
 | `{"erro":"token ausente ou invalido"}` | Faltou o cabeçalho, ou o token foi digitado errado | Copiar o comando inteiro; os tokens não têm acento |
-| `curl` responde conexão recusada (`Failed to connect` ou `Connection refused`) | O gateway parou (`docker compose ps` não mostra o `gateway`). Um endereço digitado com duas barras, como `8080//cotas`, faz isso | `docker compose up -d gateway` e repetir o comando |
+| `curl` responde conexão recusada (`Failed to connect` ou `Connection refused`) | O gateway parou (`docker compose ps` não mostra o `gateway`). Um endereço terminado em duas barras, como `http://localhost:8080//`, faz isso | `docker compose up -d gateway` e repetir o comando |
 | `{"erro":"servico indisponivel"}` | Um serviço caiu | `docker compose ps` e `docker compose up -d` |
 | Mudei um `.js` e nada mudou | O serviço não recarrega sozinho | `docker compose restart <servico>` |
 | Mudei um `init.sql` e nada mudou | O SQL só roda quando o banco é criado | `docker compose down -v` e subir de novo |

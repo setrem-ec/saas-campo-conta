@@ -35,7 +35,15 @@ Leia a pergunta marcada **Previsão no registro** em cada experimento de `experi
 | 5 | |
 | 6 | |
 
-Agora: `git add`, `git commit -m "previsoes"`, `git push`. Só depois rode os experimentos 2 a 6.
+Agora, **no terminal aberto na pasta do repositório do seu PI** (não no do CampoConta), troque `<seu-primeiro-nome>` e rode:
+
+```
+git add docs/registro-enc11-<seu-primeiro-nome>.md
+git commit -m "previsoes"
+git push
+```
+
+Push recusado porque um colega enviou antes? `git pull --rebase` e `git push` de novo. Confira no GitHub que o commit apareceu. Só depois rode os experimentos 2 a 6.
 
 ## Parte 3 — O que aconteceu
 
@@ -50,9 +58,17 @@ Para cada experimento: o que a saída mostrou (o número, a mensagem, a linha do
 | 5 | | | |
 | 6 | | | |
 
-**O sistema não subiu na sua máquina?** Use a tabela "Se der errado" do `README.md` por no máximo 10 minutos. Não resolveu: pare de consertar. Faça as previsões e o commit `previsoes` normalmente, e só então abra `saidas-reais.md` e preencha esta parte a partir dele. Nesse caso, escreva "Preenchido pelas saídas reais" na linha logo acima da tabela.
+**O sistema não subiu na sua máquina?** Use a tabela "Se der errado" do `README.md` da raiz do repositório por no máximo 10 minutos. Não resolveu: pare de consertar. Faça as previsões e o commit `previsoes` normalmente, e só então abra `saidas-reais.md` e preencha esta parte a partir dele. Nesse caso, escreva "Preenchido pelas saídas reais" na linha logo acima da tabela.
 
-Agora: `git commit -m "observacoes"` e `git push`.
+Agora, **no terminal aberto na pasta do repositório do seu PI** (não no do CampoConta), troque `<seu-primeiro-nome>` e rode:
+
+```
+git add docs/registro-enc11-<seu-primeiro-nome>.md
+git commit -m "observacoes"
+git push
+```
+
+Push recusado porque um colega enviou antes? `git pull --rebase` e `git push` de novo. Confira no GitHub que o commit apareceu.
 
 ## Parte 4 — Reescrita (depois da chamada de fechamento)
 
@@ -60,4 +76,12 @@ Releia a sua resposta da parte 1 e reescreva-a aqui, sem apagar a original. Term
 
 > 
 
-Agora: `git commit -m "reescrita"` e `git push`.
+Agora, **no terminal aberto na pasta do repositório do seu PI** (não no do CampoConta), troque `<seu-primeiro-nome>` e rode:
+
+```
+git add docs/registro-enc11-<seu-primeiro-nome>.md
+git commit -m "reescrita"
+git push
+```
+
+Push recusado porque um colega enviou antes? `git pull --rebase` e `git push` de novo. Confira no GitHub que o commit apareceu.
