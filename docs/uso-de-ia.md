@@ -30,7 +30,6 @@ O professor não programa. Ele decide o que o produto faz, escolhe entre as alte
 
 - **Hoje:** rodando o sistema. Os seis experimentos têm saída real registrada. Não há teste automatizado.
 - **Daqui em diante:** uma suíte de testes, um roteiro de comandos com a saída esperada e um revisor que lê a mudança contra a especificação, antes de cada aceite.
-- [assim: resultado do ensaio do professor de 13/10/2026, rodando o sistema como aluno, e o que ele mudou por causa disso]
 
 ## O que isto ensina para o seu PI
 
