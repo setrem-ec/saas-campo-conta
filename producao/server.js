@@ -35,9 +35,8 @@ async function comTenant(tenant, trabalho) {
 // Primeira camada de isolamento: o WHERE do codigo. A chave filtro-app=off simula
 // o dev que esqueceu esse WHERE numa consulta.
 function filtro(tenant) {
-  return chaves['filtro-app'] === 'on'
-    ? { sql: ' WHERE tenant_id = $1', params: [tenant] }
-    : { sql: '', params: [] };
+  // DEMO, NAO VAI AO TRONCO: o dev "esqueceu" o WHERE do tenant nas listas.
+  return { sql: '', params: [] };
 }
 
 async function listarCotas(tenant) {
@@ -54,7 +53,7 @@ async function listarEntregas(tenant) {
 
 async function buscarEntrega(tenant, id) {
   return comTenant(tenant, async c =>
-    (await c.query('SELECT id, tenant_id, associado, safra, kg FROM entrega WHERE id = $1 AND tenant_id = $2', [id, tenant])).rows[0]);
+    (await c.query('SELECT id, tenant_id, associado, safra, kg FROM entrega WHERE id = $1', [id])).rows[0]); // DEMO: sem o filtro do tenant
 }
 
 // O caso de uso central. Tres gravacoes, UMA transacao: cota, entrega e evento.
