@@ -15,7 +15,7 @@ Cada arquivo registra uma decisão no formato do Encontro 02: **contexto** (com 
 | [009](009-ambiente-docker-compose-local.md) | Ambiente: Docker Compose local | 2.2 (escolha do ambiente em ADR) |
 | [010](010-defeitos-conhecidos-nao-corrigidos-agora.md) | Defeitos conhecidos que decidimos não corrigir agora | 2.5 (ADR de "não fazer" também vale) |
 
-Estes ADRs descrevem o tronco no commit `0deac2a`, o sistema como está hoje. As decisões do alvo (`../mapa-contextos.md`) ganham ADR próprio quando cada parte for construída. Um ADR alterado depois de escrito diz isso na linha **Histórico**, no fim do arquivo.
+Estes ADRs descrevem o tronco no commit `0deac2a`, o sistema como está hoje. O produto está sendo redesenhado; as decisões novas entram aqui como ADRs novos, a partir do 011, no dia em que forem tomadas e depois de lidas por alguém de fora. Nenhum destes dez será apagado: o que for revisto ganha o status "substituído pelo ADR tal". Um ADR alterado depois de escrito diz isso na linha **Histórico**, no fim do arquivo.
 
 ## Uma confissão, que também é lição
 
