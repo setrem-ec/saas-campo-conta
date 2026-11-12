@@ -7,7 +7,7 @@ const { Cota } = require('./cota');
 
 const S = 'producao';
 const COBRANCA_URL = process.env.COBRANCA_URL;
-const conexao = { host: process.env.DB_HOST, database: 'producao', user: 'app_producao', password: 'lab' };
+const conexao = { host: process.env.DB_HOST, database: 'producao', user: 'postgres', password: 'lab' }; // DEMO: conecta como dono das tabelas; a politica por linha nao vale para ele
 const pool = new Pool({ ...conexao, max: 5 });       // atende as requisicoes
 const poolRelay = new Pool({ ...conexao, max: 1 });  // so o relay da outbox
 
