@@ -2,15 +2,21 @@
 # Sobe o produto do zero, numa máquina limpa, e só testa: não publica nada.
 name: testes
 on: [push]
+permissions:
+  contents: read
 jobs:
   testes:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      # Sem este passo, o pipeline ficaria verde com zero testes:
+      # o "node --test" termina em sucesso quando não acha nenhum arquivo.
+      - name: Confere que há testes para rodar
+        run: ls testes/*.test.js
       - name: Sobe o produto
         run: docker compose up -d --build --wait
       - name: Roda a suíte

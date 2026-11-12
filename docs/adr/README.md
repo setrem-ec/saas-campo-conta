@@ -14,8 +14,9 @@ Cada arquivo registra uma decisão no formato do Encontro 02: **contexto** (com 
 | [008](008-limite-de-pedidos-simultaneos-por-tenant.md) | Limite de pedidos simultâneos por tenant, no gateway | 2.5 |
 | [009](009-ambiente-docker-compose-local.md) | Ambiente: Docker Compose local | 2.2 (escolha do ambiente em ADR) |
 | [010](010-defeitos-conhecidos-nao-corrigidos-agora.md) | Defeitos conhecidos que decidimos não corrigir agora | 2.5 (ADR de "não fazer" também vale) |
+| [011](011-a-suite-roda-a-cada-push.md) | A suíte roda a cada push, numa máquina limpa | 3.1 (suíte no pipeline) |
 
-Estes ADRs descrevem o tronco no commit `0deac2a`, o sistema como está hoje. O produto está sendo redesenhado; as decisões novas entram aqui como ADRs novos, a partir do 011, no dia em que forem tomadas e depois de lidas por alguém de fora. Nenhum destes dez será apagado: o que for revisto ganha o status "substituído pelo ADR tal". Um ADR alterado depois de escrito diz isso na linha **Histórico**, no fim do arquivo.
+Os ADRs 001 a 010 descrevem o código do produto, que é o do commit `0deac2a`. O ADR 011 é o primeiro escrito no dia da decisão. O produto está sendo redesenhado; as decisões novas entram aqui como ADRs novos, no dia em que forem tomadas e depois de lidas por alguém de fora. Nenhum destes dez será apagado: o que for revisto ganha o status "substituído pelo ADR tal". Um ADR alterado depois de escrito diz isso na linha **Histórico**, no fim do arquivo.
 
 ## Uma confissão, que também é lição
 
