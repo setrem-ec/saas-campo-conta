@@ -6,9 +6,11 @@
 
 O produto atende cooperativas agrícolas, a maioria de porte parecido, com poucos milhares de entregas por safra cada. Hoje são 2 tenants; o plano é chegar a dezenas. Algumas cooperativas grandes podem exigir, por contrato, que os dados delas fiquem separados das demais. Dado comercial e dado de associado de uma cooperativa não podem aparecer para outra (ver `../lgpd.md`). A equipe que mantém o produto é pequena e não tem tempo para operar um banco por cliente.
 
+**O que cada termo quer dizer aqui.** No pool, todas as cooperativas dividem as mesmas tabelas, e toda tabela com dado de tenant tem a coluna `tenant_id` (a `evento_processado`, da idempotência, guarda só o identificador do evento). A política por linha (RLS) só devolve as linhas do tenant declarado no início de cada transação. No plano à parte (modelo híbrido), o cliente paga o custo de operar; hoje nenhum cliente está nele.
+
 ## Decisão
 
-**Por padrão, pool:** todas as cooperativas dividem as mesmas tabelas, com a coluna `tenant_id` em toda tabela que guarda dado de tenant (a `evento_processado`, da idempotência, guarda só o identificador do evento), e o isolamento tem duas camadas: o filtro por tenant no código **e** uma política de segurança por linha (RLS) no banco, que só devolve as linhas do tenant declarado no início de cada transação. **Para clientes maiores, schema ou banco próprio como plano à parte**, com o custo de operar pago pelo cliente (modelo híbrido). Hoje nenhum cliente está nesse plano, e ele não está implementado.
+Pool por padrão, com isolamento em duas camadas (filtro por tenant no código **e** política de segurança por linha no banco); schema ou banco próprio fica como plano pago à parte, ainda não implementado.
 
 ## Alternativas descartadas
 
@@ -24,6 +26,8 @@ O produto atende cooperativas agrícolas, a maioria de porte parecido, com pouco
 - **Melhora:** o serviço conecta com um papel (`app_producao`, `app_cobranca`) que não é dono das tabelas, então a política vale para ele.
 - **Piora:** tenants dividem as mesmas conexões, e um tenant pesado atrasa os outros (vizinho barulhento). Tratado no ADR 008.
 - **Piora:** a tabela `outbox` guarda dado de tenant e não tem política por linha (defeito C7, ADR 010).
-- **Melhora:** o plano à parte transforma isolamento em produto: quem precisa de mais paga pelo custo de operar, e o preço do pool continua baixo para os demais (liga com a precificação do Encontro 18).
+- **Melhora:** o plano à parte transforma isolamento em produto: quem precisa de mais paga pelo custo de operar, e o preço do pool continua baixo para os demais (liga com o encontro de precificação).
 - **Piora:** o modelo híbrido exige que o serviço descubra **onde** os dados de cada tenant moram antes de consultar (uma tabela "tenant → conexão"). Hoje o código conecta sempre no mesmo banco. Quando o primeiro cliente contratar o plano à parte, isso vira trabalho e um ADR próprio.
 - **Piora:** com dois modelos convivendo, toda mudança de tabela precisa ser aplicada no pool e em cada schema ou banco dedicado.
+
+**Histórico:** 12/11/2026: a Decisão passou a caber em uma frase, e o detalhe desceu para o Contexto; saiu a afirmação de que toda linha tem `tenant_id` (a `evento_processado` não tem); a referência ao encontro de precificação perdeu o número.

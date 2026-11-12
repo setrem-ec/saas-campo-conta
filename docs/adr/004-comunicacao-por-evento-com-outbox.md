@@ -4,7 +4,7 @@
 
 ## Contexto
 
-Na safra, o balanceiro registra uma entrega atrás da outra, com caminhão na fila. Quem registra precisa da resposta **agora** ("cabe na cota?"); a taxa da entrega, não: o gestor confere as taxas no fim do dia. Pela régua do Encontro 09, para cada seta pergunte quem está esperando. Aqui, ninguém espera a Cobrança. Se a Produção chamar a Cobrança e esperar, a balança para quando a Cobrança parar.
+Na safra, o balanceiro registra uma entrega atrás da outra, com caminhão na fila. Quem registra precisa da resposta **agora** ("cabe na cota?"); a taxa da entrega, não: o gestor confere as taxas no fim do dia. Pela régua do Encontro 09, para cada seta pergunte quem está esperando. Aqui, ninguém espera a Cobrança. Se a Produção chamar a Cobrança e esperar, a balança para quando a Cobrança parar. O cenário Q1 (`../atributos-qualidade.md`) exige 100% das entregas registradas mesmo com a Cobrança fora do ar.
 
 ## Decisão
 
@@ -17,8 +17,10 @@ Ao registrar a entrega, a Produção grava na **mesma transação** a cota atual
 
 ## Consequências
 
-- **Melhora:** com a Cobrança parada, a entrega continua sendo registrada; os eventos esperam e são entregues quando ela volta (experimento 4: fila de 5, depois 0, e nenhuma taxa perdida).
+- **Melhora:** com a Cobrança parada, a entrega continua sendo registrada; os eventos esperam e são entregues quando ela volta (experimento 4: 5 eventos pendentes, depois 0, e nenhuma taxa perdida).
 - **Piora:** a taxa aparece instantes depois da entrega, não junto (consistência eventual). Quem pede `/taxas` logo após o `POST` pode não vê-la ainda.
 - **Piora:** a entrega é "pelo menos uma vez": se o relay cair entre enviar e anotar, o evento vai de novo. Por isso existe o ADR 006.
 - **Piora:** o relay roda dentro da Produção e conhece o endereço da Cobrança; um segundo interessado no evento exigiria mudar o produtor (defeito C11, ADR 010).
-- **Piora:** um evento que a Cobrança sempre recuse trava a fila inteira; não há fila de rejeitados.
+- **Piora:** um evento que a Cobrança sempre recuse trava o envio de todos os eventos pendentes; não há fila morta.
+
+**Histórico:** 12/11/2026: o Contexto ganhou o número do cenário Q1; "fila" virou "eventos pendentes", para a palavra ficar só com a fila da balança.

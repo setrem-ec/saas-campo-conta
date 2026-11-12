@@ -4,7 +4,7 @@
 
 ## Contexto
 
-O gestor quer cotas e taxas juntas (história 8 em `../especificacao.md`). Pelo ADR 003, elas moram em dois bancos e não há `JOIN`. Se o relatório esperar os dois serviços sem limite, a lentidão de um vira a lentidão do relatório, e o gestor fica sem nada.
+O gestor quer cotas e taxas juntas (história 8 em `../especificacao.md`). Pelo ADR 003, elas moram em dois bancos e não há `JOIN`. Se o relatório esperar os dois serviços sem limite, a lentidão de um vira a lentidão do relatório, e o gestor fica sem nada. O cenário Q4 (`../atributos-qualidade.md`) pede o relatório em até 2,5 s mesmo com a Cobrança fora do ar.
 
 ## Decisão
 
@@ -21,3 +21,5 @@ O gateway chama a Produção e a Cobrança em paralelo, dá **2 segundos** a cad
 - **Piora:** o relatório só junta as duas listas; não cruza entrega com taxa por associado.
 - **Piora:** responde sucesso (200) mesmo com os dois serviços fora. Quem consome precisa ler o conteúdo, não só o código de resposta.
 - **Piora:** o gateway passou a ter lógica de negócio de leitura, e não só roteamento. Se aparecer um segundo relatório composto, vale um serviço próprio.
+
+**Histórico:** 12/11/2026: o Contexto ganhou o número do cenário Q4.

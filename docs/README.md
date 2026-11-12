@@ -43,6 +43,6 @@ Leia nesta ordem: `adr/README.md`, `adr/002` (tenancy), `adr/004` (comunicação
 - **Recuo crescente:** depois de uma falha, esperar mais a cada nova tentativa (0,5 s, 1 s, 2 s…), para não martelar quem está fora do ar.
 - **Consistência eventual:** o dado fica certo em todos os lugares, mas não no mesmo instante. A taxa aparece instantes depois da entrega.
 - **Idempotência:** receber a mesma mensagem duas vezes tem o mesmo efeito que receber uma.
-- **Saga:** sequência de passos em serviços diferentes em que, se um falha, os anteriores são desfeitos por uma ação de compensação. Volta antes de 29/10.
+- **Saga:** sequência de passos em serviços diferentes em que, se um falha, os anteriores são desfeitos por uma ação de compensação.
 - **Cliente-fornecedor / conformista:** tipos de relação entre contextos (Encontro 08). No primeiro, quem consome negocia o contrato; no segundo, aceita o formato do outro como está.
 - **Defeito C1, C2…:** numeração da lista de defeitos conhecidos, no `adr/010`.

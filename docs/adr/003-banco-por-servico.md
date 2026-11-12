@@ -19,5 +19,7 @@ Cada serviço é dono do seu banco (`producao-db` e `cobranca-db`, PostgreSQL 16
 
 - **Melhora:** a Produção pode mudar suas tabelas sem combinar com ninguém, desde que mantenha o contrato do evento (`../especificacao.md`).
 - **Piora:** o `JOIN` entre `entrega` e `taxa` deixou de existir; o experimento 3 mostra o erro `relation "taxa" does not exist`. O relatório que precisa dos dois vira composição (ADR 007).
-- **Piora:** não existe transação entre os dois bancos. Se a Cobrança recusar uma entrega que a Produção já gravou, algo precisa desfazer. Hoje nada desfaz (o nome disso é saga, assunto de 29/10).
+- **Piora:** não existe transação entre os dois bancos. Se a Cobrança recusar uma entrega que a Produção já gravou, algo precisa desfazer. Hoje nada desfaz (o nome disso é saga).
 - **Piora:** dois bancos para subir, acompanhar e copiar, em vez de um.
+
+**Histórico:** 12/11/2026: saiu a data em que a saga seria retomada em aula.

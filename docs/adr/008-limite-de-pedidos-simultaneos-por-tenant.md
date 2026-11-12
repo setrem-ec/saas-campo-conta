@@ -21,4 +21,6 @@ O gateway permite no máximo **3 pedidos em andamento por tenant**; o quarto rec
 - **Melhora:** com o limite, a Alvorada recebe 429 em 57 dos 60 pedidos e a Buricá volta a responder em cerca de 5 ms.
 - **Piora:** o limite só protege porque 3 é menor que 5 e só um tenant abusa. Dois tenants no teto ocupam 6 conexões (defeito C4, ADR 010).
 - **Piora:** a contagem fica na memória de um gateway; com dois gateways, o teto dobra (defeito C10).
-- **Piora:** o mesmo teto vale para todas as cooperativas. Plano por tamanho de cliente exigiria teto por tenant, o que liga este ADR à precificação (Encontro 18).
+- **Piora:** o mesmo teto vale para todas as cooperativas. Plano por tamanho de cliente exigiria teto por tenant, o que liga este ADR ao encontro de precificação.
+
+**Histórico:** 12/11/2026: a referência ao encontro de precificação perdeu o número.

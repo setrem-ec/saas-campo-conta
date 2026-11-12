@@ -40,3 +40,13 @@ A numeração pula de propósito: C3, C5 e C8 eram defeitos do roteiro e do READ
 - **Melhora:** C1 e C4 são material de aula melhor que qualquer experimento pronto: um furo real e um limite que falha.
 - **Piora:** até a correção, a frase "só o gateway fala com os serviços" é garantida pela rede, não pelo código.
 - **Piora:** quem digitar `//` sozinho em casa perde alguns minutos até achar a linha do README.
+
+## Situação em 12/11/2026
+
+O texto acima é a foto de 15/10 e fica como foi escrito. O que mudou desde então:
+
+- **Nenhum defeito desta lista foi corrigido.** A lista vale inteira para o commit `0deac2a`.
+- **As correções não começaram em 20/10.** Elas passaram a entrar junto com a evolução do produto, nesta ordem: C2 primeiro; depois a suíte de testes e o pipeline; depois C1; depois C12, com a taxa em centavos.
+- **Cada correção ganha o seu ADR** quando for feita, e esta lista é atualizada no mesmo commit.
+
+**Histórico:** 12/11/2026: nasceu a seção "Situação em 12/11/2026"; o texto do C13 passou a dizer que o código aceita também o corpo em JSON.

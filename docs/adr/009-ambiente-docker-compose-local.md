@@ -12,7 +12,7 @@ Tudo sobe com `docker compose up -d --build`, a partir de um `compose.yaml` com 
 
 ## Alternativas descartadas
 
-- **Cluster `saas` (kind) do Lab 0.** Mais próximo de produção, mas exige o cluster funcionando em cada máquina, e na turma de 2026-2 isso não aconteceu para a maioria. Descartada para o sistema de aula. Orquestração é assunto de Cloud Computing.
+- **Cluster `saas` (kind) do Lab 0.** Mais próximo de produção, mas exige o cluster funcionando em cada máquina antes de qualquer experimento. Descartada para o sistema de aula. Orquestração é assunto de Cloud Computing.
 - **Provedor gerenciado.** Exige conta e conexão, e os experimentos de derrubar serviço não cabem num ambiente que não controlamos. Descartada.
 
 ## Consequências
@@ -22,3 +22,5 @@ Tudo sobe com `docker compose up -d --build`, a partir de um `compose.yaml` com 
 - **Piora:** a garantia de que "só o gateway fala com os serviços" é da rede do Compose, não do código (defeito C6, ADR 010).
 - **Piora:** os três serviços dividem a mesma imagem e o código de `comum/`, o que tira parte da independência de implantação (defeito C11).
 - **Piora:** o sistema não recarrega o código sozinho; mudou um `.js`, é preciso `docker compose restart <servico>`.
+
+**Histórico:** 12/11/2026: a Decisão passou a citar o contêiner `ferramentas`, que o `compose.yaml` também declara; a alternativa do cluster ficou só com o motivo técnico.

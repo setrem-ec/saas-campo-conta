@@ -4,7 +4,7 @@
 
 ## Contexto
 
-Pelo ADR 004, o mesmo evento pode chegar duas vezes à Cobrança. Cada evento gera uma taxa; um evento repetido cobraria o associado em dobro. É o problema do caso SafraLog (Encontro 09), em que um aviso reenviado gerou notas fiscais em dobro.
+Pelo ADR 004, o mesmo evento pode chegar duas vezes à Cobrança. Cada evento gera uma taxa; um evento repetido cobraria o associado em dobro. Na entrega de 2.000 kg do experimento 5, seriam R$ 200,00 em vez de R$ 100,00. É o problema do caso SafraLog (Encontro 09), em que um aviso reenviado gerou notas fiscais em dobro.
 
 ## Decisão
 
@@ -21,3 +21,5 @@ Antes de gerar a taxa, a Cobrança grava o identificador do evento na tabela `ev
 - **Melhora:** a trava é do banco (chave primária), então vale mesmo com dois eventos iguais chegando ao mesmo tempo.
 - **Piora:** a idempotência existe só no consumidor. No registro da entrega, onde o balanceiro pode repetir o clique, não existe (defeito C9, ADR 010).
 - **Piora:** quem alcança a rede interna pode mandar um evento com um identificador futuro e "queimá-lo", e o legítimo é descartado depois (defeito C1, ADR 010).
+
+**Histórico:** 12/11/2026: o Contexto ganhou o valor da cobrança em dobro, medido no experimento 5.
