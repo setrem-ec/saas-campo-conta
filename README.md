@@ -36,6 +36,7 @@ Pare aqui. O resto se faz no encontro, com `aula/enc11/experimentos.md`: quem ro
 | `compose.yaml`, `Dockerfile` | O ambiente que sobe tudo |
 | `ferramentas/` | Scripts do laboratório (não fazem parte do produto) |
 | `aula/` | Material dos encontros, uma pasta por encontro (não faz parte do produto) |
+| `docs/` | Documentação de arquitetura: visão, C4, mapa de contextos, ADRs, LGPD e declaração de uso de IA. É o exemplo do que as Etapas 1 e 2 pedem; comece por `docs/README.md` |
 
 ## O desenho
 
