@@ -16,7 +16,7 @@ Cada arquivo registra uma decisão no formato do Encontro 02: **contexto** (com 
 | [010](010-defeitos-conhecidos-nao-corrigidos-agora.md) | Defeitos conhecidos que decidimos não corrigir agora | 2.5 (ADR de "não fazer" também vale) |
 | [011](011-a-suite-roda-a-cada-push.md) | A suíte roda a cada push, numa máquina limpa | 3.1 (suíte no pipeline) |
 
-Os ADRs 001 a 010 descrevem o código do produto, que é o do commit `0deac2a`. O ADR 011 é o primeiro escrito no dia da decisão. O produto está sendo redesenhado; as decisões novas entram aqui como ADRs novos, no dia em que forem tomadas e depois de lidas por alguém de fora. Nenhum destes dez será apagado: o que for revisto ganha o status "substituído pelo ADR tal". Um ADR alterado depois de escrito diz isso na linha **Histórico**, no fim do arquivo.
+Os ADRs 001 a 010 descrevem o código do produto, que é o do commit `0deac2a`. O ADR 011 é o primeiro escrito no dia da decisão. O produto está sendo redesenhado; as decisões novas entram aqui como ADRs novos, no dia em que forem tomadas e depois de lidas por alguém de fora. Nenhum dos ADRs 001 a 010 será apagado: o que for revisto ganha o status "substituído pelo ADR tal". Um ADR alterado depois de escrito diz isso na linha **Histórico**, no fim do arquivo.
 
 ## Uma confissão, que também é lição
 

@@ -53,4 +53,4 @@ O associado não usa o sistema. Ele aparece só nos dados, como um código.
 
 ## Para onde o produto vai
 
-O CampoConta está sendo redesenhado como programa de fidelidade para cooperativas. O desenho novo ainda está em revisão e não está neste repositório. Quando entrar, cada decisão virá num ADR novo, a partir do 011, sem apagar os dez que descrevem o sistema de hoje.
+O CampoConta está sendo redesenhado como programa de fidelidade para cooperativas. O desenho novo ainda está em revisão e não está neste repositório. Quando entrar, cada decisão virá num ADR novo, a partir do 012, sem apagar os que descrevem o sistema de hoje.

@@ -133,9 +133,9 @@ Não tem o Node 22 instalado? Rode por dentro do Compose, só com o Docker:
 docker compose run --rm -v "./testes:/app/testes:ro" -w /app/testes ferramentas node --test
 ```
 
-O esperado é `pass 3` e `fail 0`. Cada execução registra duas entregas de 1 kg; `docker compose down -v` volta aos dados de exemplo.
+O esperado é `pass 3` e `fail 0`. Cada execução registra duas entregas de 1 kg e as duas taxas que elas geram; `docker compose down -v` volta aos dados de exemplo.
 
-O GitHub roda essa mesma suíte a cada push: veja a aba **Actions** do repositório. A decisão está em `docs/adr/011-a-suite-roda-a-cada-push.md`.
+O GitHub roda essa mesma suíte a cada push: veja a aba **Actions** do repositório. A decisão está em `docs/adr/011-a-suite-roda-a-cada-push.md`. O que já tem teste e o que ainda falta está em `docs/plano-de-testes.md`.
 
 ## Desligar e zerar
 

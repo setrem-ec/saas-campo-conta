@@ -93,7 +93,7 @@ Toda rota, exceto `/saude`, exige token: sem token válido, responde 401. Toda r
 
 ## Decisões de teste
 
-Desde 12/11/2026 há **um teste automatizado**, o de isolamento entre tenants (`testes/isolamento.test.js`), que roda a cada push (ADR 011). O resto continua conferido pelo roteiro dos seis experimentos, executado à mão em 10/10. Um bom teste, quando existir, exercita o sistema pela porta do gateway e observa só o que quem chama enxerga; não abre o banco nem conhece a outbox. Testes são assunto da Unidade 4.
+Desde 12/11/2026 há **um teste automatizado**, o de isolamento entre tenants (`testes/isolamento.test.js`), que roda a cada push (ADR 011). O resto continua conferido pelo roteiro dos seis experimentos, executado à mão em 10/10. Esse teste exercita o sistema pela porta do gateway e observa só o que quem chama enxerga; não abre o banco nem conhece a outbox. O que falta testar está em `plano-de-testes.md`.
 
 ## Fora de escopo
 
