@@ -4,7 +4,7 @@
 
 > **Isto não é o seu PI.** É o exemplo público do CampoConta, material de aula. Um artefato de PI que reproduza este problema e estas personas é avaliado como cópia. Use o **formato**; o conteúdo do seu produto é seu.
 
-**Escrito em 12/11/2026.** Descreve o que roda no tronco `setrem-ec/saas-campo-conta`, commit `0deac2a`. O que o sistema ainda não faz está na seção "Fora do produto".
+**Escrito em 12/11/2026.** Descreve o que roda no tronco `setrem-ec/saas-campo-conta`. O código do produto é o do commit `0deac2a`. O que o sistema ainda não faz está na seção "Fora do produto".
 
 ## Problema
 
@@ -49,7 +49,7 @@ O associado não usa o sistema. Ele aparece só nos dados, como um código.
 - **Papéis.** Qualquer token faz tudo, e o painel do laboratório não pede nada.
 - **Boleto e pagamento da taxa.**
 - **Balança física.** O peso é digitado.
-- **Testes automatizados e pipeline.**
+- **Suíte de testes completa.** Há um teste, o de isolamento, e o pipeline que o roda a cada push (ADR 011). Teste de unidade, de contrato e de segurança ainda não existem.
 
 ## Para onde o produto vai
 

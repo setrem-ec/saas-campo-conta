@@ -36,6 +36,8 @@ Pare aqui. O resto se faz no encontro, com `aula/enc11/experimentos.md`: quem ro
 | `compose.yaml`, `Dockerfile` | O ambiente que sobe tudo |
 | `ferramentas/` | Scripts do laboratório (não fazem parte do produto) |
 | `aula/` | Material dos encontros, uma pasta por encontro (não faz parte do produto) |
+| `testes/` | A suíte de testes. Hoje, um teste: o de isolamento entre as duas cooperativas |
+| `.github/workflows/` | O pipeline: roda a suíte a cada push, numa máquina limpa do GitHub |
 | `docs/` | Documentação de arquitetura: visão, C4, mapa de contextos, ADRs, LGPD e declaração de uso de IA. É o exemplo do que as Etapas 1 e 2 pedem; comece por `docs/README.md` |
 
 ## O desenho
@@ -114,8 +116,26 @@ Chaves que desligam uma defesa, para você ver o que ela evita. Não fazem parte
 - **Login de verdade.** O token é fixo.
 - **Broker de mensagens.** A fila é uma tabela (a `outbox`), porque há um produtor e um consumidor. Quando trocar a tabela por um broker é decisão de arquitetura, discutida em `aula/enc11/o-que-e-microsservico.md`. Operar um broker gerenciado é assunto de Cloud Computing.
 - **Os contextos Associados e Relatórios** do mapa do Encontro 08. Dois serviços de domínio bastam para mostrar a conversa.
-- **Testes automatizados e pipeline.** Entram na Unidade 4, sobre este mesmo sistema.
+- **A suíte completa.** Há um teste, o de isolamento, e o pipeline que o roda (seção "Rodar os testes"). Teste de unidade, de contrato e de segurança entram na Unidade 4, sobre este mesmo sistema.
 - **Kubernetes.** O Compose é só a bancada.
+
+## Rodar os testes
+
+Com o sistema no ar, a suíte confere que uma cooperativa não vê a entrega da outra, nos dois sentidos.
+
+```powershell
+node --test
+```
+
+Não tem o Node 22 instalado? Rode por dentro do Compose, só com o Docker:
+
+```powershell
+docker compose run --rm -v "./testes:/app/testes:ro" -w /app/testes ferramentas node --test
+```
+
+O esperado é `pass 3` e `fail 0`. Cada execução registra duas entregas de 1 kg; `docker compose down -v` volta aos dados de exemplo.
+
+O GitHub roda essa mesma suíte a cada push: veja a aba **Actions** do repositório. A decisão está em `docs/adr/011-a-suite-roda-a-cada-push.md`.
 
 ## Desligar e zerar
 

@@ -1,6 +1,6 @@
 # Documentação de arquitetura do CampoConta
 
-Esta pasta é o exemplo do que a sua unidade de PI entrega nas Etapas 1 e 2, feito para o CampoConta. **Copie o formato, não o conteúdo:** o seu produto tem outro problema, outros números e outras decisões. Copiar uma decisão daqui sem o contexto do seu produto é avaliado como cópia de material de aula.
+Esta pasta é o exemplo do que a sua unidade de PI entrega nas Etapas 1 e 2, e do começo da Etapa 3, feito para o CampoConta. **Copie o formato, não o conteúdo:** o seu produto tem outro problema, outros números e outras decisões. Copiar uma decisão daqui sem o contexto do seu produto é avaliado como cópia de material de aula.
 
 ## O que o seu repositório precisa ter, e o exemplo de cada item
 
@@ -17,6 +17,9 @@ Esta pasta é o exemplo do que a sua unidade de PI entrega nas Etapas 1 e 2, fei
 | 2 | 2.4 Mapa de contextos coerente com o C4, com as divergências | `mapa-contextos.md` |
 | 2 | 2.5 ADRs atualizados, no mínimo mais 2, incluindo a comunicação entre os serviços | `adr/004` (comunicação) e `adr/005` a `adr/010` |
 | 2 | Declaração de uso de IA, junto com a entrega | `uso-de-ia.md` |
+| 3 | 3.1 Suíte de testes rodando a cada push | `adr/011`, `.github/workflows/testes.yml` e a aba Actions do repositório |
+| 3 | 3.2 Teste automatizado que prova o isolamento | `testes/isolamento.test.js` |
+| 3 | "O pipeline falha se um teste quebra", demonstrado | A branch `demo/isolamento-quebrado`, com ✗ na aba Actions |
 
 A `especificacao.md` não é cobrada; mostra como descrever o que o sistema promete antes de mudá-lo.
 

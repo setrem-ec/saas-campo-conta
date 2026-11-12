@@ -18,6 +18,7 @@ O professor não programa. Ele decide o que o produto faz, escolhe entre as alte
 | `README.md` da raiz | Redigir o "como rodar" e os limites do sistema | Rascunho da IA, lido pelo professor | **Rejeitado e reescrito:** a IA escreveu que mensageria gerenciada era assunto de outra disciplina. O professor corrigiu: escolher entre tabela, fila e publicar/assinar é decisão de arquitetura desta disciplina |
 | ADRs 001 a 010 | Registrar as decisões que o código já tinha tomado | A IA redigiu em 15/10/2026, depois do código pronto. Cada ADR confessa isso no campo Status | **Aceitos** pelo professor. **Efeito colateral registrado:** escrever as alternativas depois mostrou decisões frágeis, que viraram o `adr/010` |
 | `visao.md`, `c4.md`, `mapa-contextos.md` | Descrever o sistema como está | A IA redigiu a partir do código. Um revisor automático sem contexto conferiu cada afirmação contra o commit `0deac2a` | **Corrigido** o que não batia com o código publicado: 11 imprecisões em 12/11/2026 (ex.: a lista de rotas omitia duas, e o mapeamento LGPD dizia que o sistema sabe quem registrou cada entrega, o que ele ainda não sabe) |
+| `testes/isolamento.test.js` e `.github/workflows/testes.yml` | Escrever o primeiro teste e o pipeline | O professor definiu o tamanho (um teste de isolamento, nos dois sentidos) e os critérios de aceite antes do código. A IA escreveu, rodou na máquina e no GitHub, e quebrou o isolamento de propósito numa branch à parte, para provar que o teste falha | **O aceite é do professor,** que confere dois resultados no GitHub, um verde e um vermelho, sem ler o código. **Achado no caminho:** com só uma das duas camadas de isolamento removida, o teste continua verde; está dito no `adr/011` |
 | `atributos-qualidade.md`, `lgpd.md`, `especificacao.md` | Redigir cenários, mapeamento de dados e o que o sistema promete | Rascunho da IA sobre números medidos nos experimentos | **Aceitos** pelo professor |
 
 ## O que a IA não decidiu
@@ -28,8 +29,8 @@ O professor não programa. Ele decide o que o produto faz, escolhe entre as alte
 
 ## Como o resultado é conferido
 
-- **Hoje:** rodando o sistema. Os seis experimentos têm saída real registrada. Não há teste automatizado.
-- **Daqui em diante:** uma suíte de testes, um roteiro de comandos com a saída esperada e um revisor que lê a mudança contra a especificação, antes de cada aceite.
+- **Hoje:** rodando o sistema. Os seis experimentos têm saída real registrada. Há um teste automatizado, o de isolamento, que roda a cada push.
+- **Daqui em diante:** uma suíte de testes maior, um roteiro de comandos com a saída esperada e um revisor que lê a mudança contra a especificação, antes de cada aceite.
 
 ## O que isto ensina para o seu PI
 
