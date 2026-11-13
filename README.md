@@ -107,33 +107,53 @@ Chaves que desligam uma defesa, para você ver o que ela evita. Não fazem parte
 | `filtro-app` | on | off: as duas listagens da produção (`/cotas` e `/entregas`) deixam de filtrar pelo tenant. É o experimento 2 |
 | `relay-duplica` | off | on: cada evento é entregue à cobrança **duas vezes**, como se o relay tivesse caído no meio do envio |
 | `idempotencia` | on | off: a cobrança para de conferir se já processou o evento. Só mostra efeito junto com `relay-duplica` on: registre uma entrega e a taxa aparece em dobro em `/taxas` |
-| `limite-tenant` | on | off: o gateway deixa de limitar cada tenant a 3 pedidos simultâneos (o quarto recebe erro 429). Usado em aula com `ferramentas/inundar.js` |
+| `limite-tenant` | on | off: o gateway deixa de limitar os pedidos simultâneos de cada tenant, e ninguém mais espera na fila. Usado em aula com `ferramentas/inundar.js` |
 
 `curl.exe http://localhost:8081/fila` mostra quantos eventos ainda esperam entrega.
+
+`curl.exe http://localhost:8081/limite` mostra o limite de cada tenant: o teto e a fila das duas faixas, e quantos pedidos estão em andamento e esperando agora.
+
+### Os números do limite
+
+Cada cooperativa tem um teto de pedidos em andamento. O excedente espera numa fila e só recebe erro 429 se a fila encher ou a espera passar do teto (ADR 012). Os números são variáveis de ambiente, com padrão no `compose.yaml`:
+
+| Variável | Padrão | O que é |
+|---|---|---|
+| `MAX_SIMULTANEAS` | 40 | Pedidos em andamento por tenant, nas rotas comuns |
+| `FILA_MAXIMA` | 80 | Lugares na fila das rotas comuns |
+| `MAX_PESADAS` | 8 | Pedidos em andamento por tenant, nas rotas pesadas |
+| `FILA_PESADAS` | 64 | Lugares na fila das rotas pesadas |
+| `ROTAS_PESADAS` | `/relatorio-pesado` | Quais rotas são pesadas, separadas por vírgula |
+| `ESPERA_MAXIMA_MS` | 5000 | Espera máxima na fila, em milissegundos |
+| `POOL_MAX` | 20 | Conexões de banco da produção |
+
+Para testar outro número sem editar nada, no PowerShell: `$env:MAX_PESADAS = "2"; docker compose up -d`. Os números dependem uns dos outros: leia o ADR 012 antes de mudar o padrão.
 
 ## O que ficou de fora, de propósito
 
 - **Login de verdade.** O token é fixo.
 - **Broker de mensagens.** A fila é uma tabela (a `outbox`), porque há um produtor e um consumidor. Quando trocar a tabela por um broker é decisão de arquitetura, discutida em `aula/enc11/o-que-e-microsservico.md`. Operar um broker gerenciado é assunto de Cloud Computing.
 - **Os contextos Associados e Relatórios** do mapa do Encontro 08. Dois serviços de domínio bastam para mostrar a conversa.
-- **A suíte completa.** Há um teste, o de isolamento, e o pipeline que o roda (seção "Rodar os testes"). Teste de unidade, de contrato e de segurança entram na Unidade 4, sobre este mesmo sistema.
+- **A suíte completa.** Há dois testes, o de isolamento e o da fila do gateway, e o pipeline que os roda (seção "Rodar os testes"). Teste de unidade, de contrato e de segurança entram na Unidade 4, sobre este mesmo sistema.
 - **Kubernetes.** O Compose é só a bancada.
 
 ## Rodar os testes
 
-Com o sistema no ar, a suíte confere que uma cooperativa não vê a entrega da outra, nos dois sentidos.
+Com o sistema no ar, a suíte confere duas coisas: que uma cooperativa não vê a entrega da outra, nos dois sentidos, e que o pedido acima do limite espera na fila em vez de falhar.
 
 ```powershell
-node --test
+node --test --test-concurrency=1
 ```
+
+O `--test-concurrency=1` roda um arquivo de teste por vez. Sem ele, os dois arquivos rodam juntos e um enche a fila que o outro está medindo.
 
 Não tem o Node 22 instalado? Rode por dentro do Compose, só com o Docker:
 
 ```powershell
-docker compose run --rm -v "./testes:/app/testes:ro" -w /app/testes ferramentas node --test
+docker compose run --rm -v "./testes:/app/testes:ro" -w /app/testes ferramentas node --test --test-concurrency=1
 ```
 
-O esperado é `pass 3` e `fail 0`. Cada execução registra duas entregas de 1 kg e as duas taxas que elas geram; `docker compose down -v` volta aos dados de exemplo.
+O esperado é `pass 7` e `fail 0`, em cerca de 10 segundos. Cada execução registra duas entregas de 1 kg e as duas taxas que elas geram; `docker compose down -v` volta aos dados de exemplo.
 
 O GitHub roda essa mesma suíte a cada push: veja a aba **Actions** do repositório. A decisão está em `docs/adr/011-a-suite-roda-a-cada-push.md`. O que já tem teste e o que ainda falta está em `docs/plano-de-testes.md`.
 

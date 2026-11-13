@@ -3,7 +3,7 @@
 // não pode vê-la, nem pela busca por identificador, nem pela lista. Nos dois sentidos.
 //
 // Como rodar, com o sistema no ar (docker compose up -d --build --wait):
-//   node --test
+//   node --test --test-concurrency=1
 // O teste só usa o que vem no Node 22: o executor de testes e o fetch. Ele não abre
 // o banco e não conhece a outbox: enxerga só o que quem chama enxerga.
 //

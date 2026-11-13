@@ -39,7 +39,7 @@ Um produto com uma porta só. Quem chama se identifica com um token; o sistema d
 **Dono do produto**
 
 16. Como dono do produto, quero que cada cooperativa tenha um teto de pedidos simultâneos, para que nenhuma monopolize o sistema.
-17. Como dono do produto, quero que quem passa do teto receba uma resposta que diga isso, para saber que deve tentar depois.
+17. Como dono do produto, quero que quem passa do teto espere a vez numa fila, e só seja recusado se a espera passar de 5 s, com uma resposta que sugira tentar de novo em 1 s. *(Mudou em 12/11/2026, ADR 012: antes, a recusa era na hora.)*
 18. Como dono do produto, quero que o mundo de fora só alcance o gateway, para ter um lugar só onde decidir quem é quem.
 19. Como dono do produto, quero que cada pedido carregue um identificador nos logs dos três serviços, para seguir um problema de ponta a ponta. *(Hoje falta no caminho do evento: a cobrança registra o identificador no `GET /taxas`, mas não ao processar o evento. Defeito C14, ADR 010.)*
 
@@ -61,13 +61,13 @@ Um produto com uma porta só. Quem chama se identifica com um token; o sistema d
 - **Isolamento em duas camadas.** A aplicação filtra por tenant; o banco aplica uma política por linha que consulta o tenant declarado no início de cada transação. O serviço conecta com um papel que não é dono das tabelas.
 - **Evento na mesma transação da entrega** (outbox). Um laço dentro da produção entrega os eventos pendentes, em ordem, com recuo crescente quando a cobrança não responde. A entrega é "pelo menos uma vez".
 - **Consumidor idempotente.** A cobrança registra o identificador de cada evento processado; a chave primária impede o segundo processamento.
-- **Limite por tenant no gateway:** um teto de pedidos em andamento por tenant. O excedente é recusado na hora.
+- **Limite por tenant no gateway, com fila:** um teto de pedidos em andamento por tenant, em duas faixas: 40 nas rotas comuns e 8 no relatório pesado. O excedente espera numa fila do próprio tenant (80 e 64 lugares). Só é recusado com a fila cheia ou depois de 5 s de espera (ADR 012, que substitui o 008).
 - **Composição no gateway** para o relatório, com prazo por chamada e resposta parcial.
 - **Chaves de laboratório** em uma porta separada da do produto.
 
 ### Contrato das rotas do produto
 
-Toda rota, exceto `/saude`, exige token: sem token válido, responde 401. Toda rota com token responde 429 quando o tenant já tem 3 pedidos em andamento. Toda rota encaminhada a um serviço responde 503 se ele não responde. A coluna de erros lista só os erros próprios de cada rota.
+Toda rota, exceto `/saude`, exige token: sem token válido, responde 401. Toda rota com token responde 429, com o cabeçalho `Retry-After: 1`, quando a fila do tenant está cheia ou a espera passa de 5 s. Toda rota encaminhada a um serviço responde 503 se ele não responde. A coluna de erros lista só os erros próprios de cada rota.
 
 | Rota | Resposta de sucesso | Erros próprios |
 |---|---|---|
