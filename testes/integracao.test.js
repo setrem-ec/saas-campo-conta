@@ -66,8 +66,8 @@ test('integração: cada defesa sozinha', async (t) => {
     assert.equal(criada.status, 201, `a Alvorada não conseguiu registrar a entrega: ${JSON.stringify(criada.dados)}`);
     const id = criada.dados.entrega_id;
 
-    await chave('filtro-app', 'off');
     try {
+      await chave('filtro-app', 'off'); // dentro do try: se a troca falhar no meio, o finally ainda religa
       const lista = await pedir(BURICA, 'GET', '/entregas');
       assert.equal(lista.status, 200, `resposta inesperada: GET /entregas como Buricá respondeu ${lista.status}`);
       assert.ok(lista.dados.entregas.length > 0, 'a lista da Buricá veio vazia: o teste não prova nada sem as linhas dela');
@@ -84,8 +84,8 @@ test('integração: cada defesa sozinha', async (t) => {
   });
 
   await t.test('o mesmo evento entregue duas vezes gera uma taxa só', async () => {
-    await chave('relay-duplica', 'on');
     try {
+      await chave('relay-duplica', 'on'); // dentro do try, pelo mesmo motivo
       const criada = await pedir(BURICA, 'POST', '/entregas', { associado: BURICA.associado, safra: SAFRA, kg: 1 });
       assert.equal(criada.status, 201, `a Buricá não conseguiu registrar a entrega: ${JSON.stringify(criada.dados)}`);
       const id = criada.dados.entrega_id;
