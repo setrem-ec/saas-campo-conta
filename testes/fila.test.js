@@ -54,7 +54,20 @@ async function esperarFila() {
   throw new Error('a fila de relatórios da Alvorada não chegou a se formar em 5 s');
 }
 
+// Espera o produto responder: logo depois de subir, o gateway pode estar no ar e a produção ainda não.
+async function esperarProduto() {
+  const limite = Date.now() + 30000;
+  while (Date.now() < limite) {
+    try {
+      if ((await pedir('tok-alvorada', '/cotas')).status === 200) return;
+    } catch { /* ainda subindo */ }
+    await new Promise(pronto => setTimeout(pronto, 500));
+  }
+  throw new Error('o produto não respondeu 200 em GET /cotas em 30 s');
+}
+
 test('fila do gateway por tenant', async (t) => {
+  await esperarProduto();
   const { max_simultaneas: maximo, fila_maxima: fila } = await esperarVazio();
 
   await t.test('o pedido acima do limite espera na fila e é atendido', async () => {

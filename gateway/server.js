@@ -36,11 +36,15 @@ const ROTAS = [
 // A requisicao excedente ESPERA na fila da faixa. So recebe 429 se a fila estiver cheia
 // ou se a espera passar de ESPERA_MAXIMA_MS. Os padroes vem da medicao citada no ADR 012.
 // Numero invalido na variavel de ambiente (vazio, texto, negativo) cai no padrao.
-const inteiro = (nome, padrao) => { const n = Number(process.env[nome]); return Number.isInteger(n) && n >= 0 ? n : padrao; };
+const inteiro = (nome, padrao, minimo = 0) => {
+  const texto = (process.env[nome] || '').trim();
+  const n = Number(texto);
+  return texto !== '' && Number.isInteger(n) && n >= minimo ? n : padrao;
+};
 const ROTAS_PESADAS = (process.env.ROTAS_PESADAS || '/relatorio-pesado').split(',').map(r => r.trim()).filter(Boolean);
 const FAIXAS = {
-  geral:  { max: inteiro('MAX_SIMULTANEAS', 40), fila: inteiro('FILA_MAXIMA', 80) },
-  pesada: { max: inteiro('MAX_PESADAS', 8),      fila: inteiro('FILA_PESADAS', 64) },
+  geral:  { max: inteiro('MAX_SIMULTANEAS', 40, 1), fila: inteiro('FILA_MAXIMA', 80) },
+  pesada: { max: inteiro('MAX_PESADAS', 8, 1),      fila: inteiro('FILA_PESADAS', 64) },
 };
 const ESPERA_MAXIMA_MS = inteiro('ESPERA_MAXIMA_MS', 5000);
 const emAndamento = {};  // "tenant faixa" -> requisicoes em andamento
@@ -76,6 +80,8 @@ function pedirVaga(tenant, faixa, res) {
 // Quem termina passa a vaga ao mais antigo da fila; sem fila, a vaga volta a faixa do tenant.
 function devolverVaga(tenant, faixa) {
   const chave = tenant + ' ' + faixa;
+  // Acima do teto (pedidos aceitos com a chave limite-tenant desligada): a vaga some, ninguem herda.
+  if (emAndamento[chave] > FAIXAS[faixa].max) { emAndamento[chave]--; return; }
   const proximo = (filas[chave] || []).shift();
   if (!proximo) { emAndamento[chave]--; return; }
   clearTimeout(proximo.prazo);
