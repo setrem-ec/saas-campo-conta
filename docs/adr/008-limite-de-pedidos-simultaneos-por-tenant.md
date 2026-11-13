@@ -1,6 +1,6 @@
 # ADR 008 — Limite de pedidos simultâneos por tenant, no gateway
 
-**Status:** aceito · decidido no código em 10/10/2026, registrado em 15/10/2026
+**Status:** substituído pelo [ADR 012](012-fila-com-teto-e-duas-faixas-no-gateway.md) em 12/11/2026 · decidido no código em 10/10/2026, registrado em 15/10/2026
 
 ## Contexto
 
@@ -23,4 +23,4 @@ O gateway permite no máximo **3 pedidos em andamento por tenant**; o quarto rec
 - **Piora:** a contagem fica na memória de um gateway; com dois gateways, o teto dobra (defeito C10).
 - **Piora:** o mesmo teto vale para todas as cooperativas. Plano por tamanho de cliente exigiria teto por tenant, o que liga este ADR ao encontro de precificação.
 
-**Histórico:** 12/11/2026: a referência ao encontro de precificação perdeu o número.
+**Histórico:** 12/11/2026: a referência ao encontro de precificação perdeu o número. 12/11/2026: o status passou a "substituído pelo ADR 012"; o texto acima não mudou.
