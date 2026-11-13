@@ -1,6 +1,6 @@
 // GATEWAY: a unica porta do produto (8080). Faz quatro coisas, nesta ordem:
 //   1. descobre QUEM esta chamando (token -> tenant)
-//   2. aplica o limite POR TENANT
+//   2. aplica o limite POR TENANT, em duas faixas (o excedente espera numa fila, com teto)
 //   3. encaminha ao servico dono da rota, com o tenant num cabecalho
 //   4. compoe o relatorio que precisa de dois servicos
 // A porta 8081 e o painel do laboratorio (chaves dos experimentos).
@@ -28,10 +28,59 @@ const ROTAS = [
   { prefixo: '/taxas',            destino: COBRANCA, nome: 'cobranca' },
 ];
 
-// Limite por tenant: no maximo 3 requisicoes em andamento por tenant. A quarta recebe 429.
-const MAX_SIMULTANEAS = 3;
-const emAndamento = {};
+// Limite por tenant com fila (ADR 012). Cada tenant tem DUAS faixas, cada uma com seu
+// teto de requisicoes em andamento e sua fila:
+//   - geral:  as rotas rapidas. O teto e alto.
+//   - pesada: as rotas que seguram uma conexao do banco por muito tempo. O teto e baixo,
+//             menor que o pool da producao, para um tenant nao tirar o banco do outro.
+// A requisicao excedente ESPERA na fila da faixa. So recebe 429 se a fila estiver cheia
+// ou se a espera passar de ESPERA_MAXIMA_MS. Os padroes vem da medicao citada no ADR 012.
+// Numero invalido na variavel de ambiente (vazio, texto, negativo) cai no padrao.
+const inteiro = (nome, padrao) => { const n = Number(process.env[nome]); return Number.isInteger(n) && n >= 0 ? n : padrao; };
+const ROTAS_PESADAS = (process.env.ROTAS_PESADAS || '/relatorio-pesado').split(',').map(r => r.trim()).filter(Boolean);
+const FAIXAS = {
+  geral:  { max: inteiro('MAX_SIMULTANEAS', 40), fila: inteiro('FILA_MAXIMA', 80) },
+  pesada: { max: inteiro('MAX_PESADAS', 8),      fila: inteiro('FILA_PESADAS', 64) },
+};
+const ESPERA_MAXIMA_MS = inteiro('ESPERA_MAXIMA_MS', 5000);
+const emAndamento = {};  // "tenant faixa" -> requisicoes em andamento
+const filas = {};        // "tenant faixa" -> pedidos esperando vaga, do mais antigo para o mais novo
 const chaves = { 'limite-tenant': 'on' };
+
+const faixaDe = caminho => ROTAS_PESADAS.some(p => caminho === p || caminho.startsWith(p + '/')) ? 'pesada' : 'geral';
+
+// Devolve 'vaga' quando o pedido pode seguir, ou o motivo da recusa.
+function pedirVaga(tenant, faixa, res) {
+  const chave = tenant + ' ' + faixa;
+  if (chaves['limite-tenant'] !== 'on' || (emAndamento[chave] || 0) < FAIXAS[faixa].max) {
+    emAndamento[chave] = (emAndamento[chave] || 0) + 1;
+    return Promise.resolve('vaga');
+  }
+  const fila = filas[chave] || (filas[chave] = []);
+  if (fila.length >= FAIXAS[faixa].fila) return Promise.resolve('fila cheia');
+  return new Promise(resolver => {
+    const espera = { resolver };
+    const sair = motivo => {
+      const posicao = fila.indexOf(espera);
+      if (posicao === -1) return;  // ja recebeu a vaga
+      fila.splice(posicao, 1);
+      clearTimeout(espera.prazo);
+      resolver(motivo);
+    };
+    espera.prazo = setTimeout(() => sair('espera esgotada'), ESPERA_MAXIMA_MS);
+    res.once('close', () => sair('cliente desistiu'));
+    fila.push(espera);
+  });
+}
+
+// Quem termina passa a vaga ao mais antigo da fila; sem fila, a vaga volta a faixa do tenant.
+function devolverVaga(tenant, faixa) {
+  const chave = tenant + ' ' + faixa;
+  const proximo = (filas[chave] || []).shift();
+  if (!proximo) { emAndamento[chave]--; return; }
+  clearTimeout(proximo.prazo);
+  proximo.resolver('vaga');
+}
 
 function identificar(req) {
   const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
@@ -64,10 +113,17 @@ http.createServer(async (req, res) => {
   const { tenant } = quem;
   const rid = crypto.randomBytes(3).toString('hex');
 
-  if (chaves['limite-tenant'] === 'on' && (emAndamento[tenant] || 0) >= MAX_SIMULTANEAS) {
-    return responder(res, 429, { erro: `limite do tenant ${tenant}: ${MAX_SIMULTANEAS} requisicoes simultaneas` });
+  const faixa = faixaDe(caminho);
+  const vaga = await pedirVaga(tenant, faixa, res);
+  if (vaga === 'cliente desistiu') return;
+  if (vaga !== 'vaga') {
+    log(S, `req=${rid} tenant=${tenant} faixa=${faixa} RECUSADO (${vaga}) apos ${Date.now() - inicio} ms`);
+    res.setHeader('Retry-After', '1');  // em segundos: quando vale tentar de novo
+    return responder(res, 429, {
+      erro: `limite do tenant ${tenant}, faixa ${faixa}: ${vaga} (teto de ${FAIXAS[faixa].max} requisicoes em andamento)`,
+      esperou_ms: Date.now() - inicio,
+    });
   }
-  emAndamento[tenant] = (emAndamento[tenant] || 0) + 1;
 
   // O cabecalho x-tenant-id que o cliente mandar e DESCARTADO: quem define o tenant e o token.
   const cabecalhos = { 'x-tenant-id': tenant, 'x-usuario': quem.usuario, 'x-request-id': rid };
@@ -92,7 +148,7 @@ http.createServer(async (req, res) => {
     log(S, `req=${rid} tenant=${tenant} FALHA ${erro.name}: servico nao respondeu`);
     responder(res, 503, { erro: 'servico indisponivel', total_ms: Date.now() - inicio });
   } finally {
-    emAndamento[tenant]--;
+    devolverVaga(tenant, faixa);
   }
 }).listen(8080, () => log(S, 'produto na porta 8080'));
 
@@ -100,6 +156,7 @@ http.createServer(async (req, res) => {
 // GET  /chaves               -> estado de todas as chaves
 // POST /chaves/<nome>/<on|off>
 // GET  /fila                 -> eventos da outbox ainda nao entregues
+// GET  /limite               -> limite por tenant e por faixa: configuracao, pedidos em andamento e na fila
 const DONO = { 'limite-tenant': null, 'filtro-app': PRODUCAO, 'relay-duplica': PRODUCAO, 'idempotencia': COBRANCA };
 
 http.createServer(async (req, res) => {
@@ -108,6 +165,20 @@ http.createServer(async (req, res) => {
     if (caminho === '/fila') {
       const r = await chamar(PRODUCAO + '/interno/fila');
       return responder(res, 200, r.corpo);
+    }
+    if (caminho === '/limite') {
+      const tenants = {};
+      const faixas = {};
+      for (const [faixa, { max, fila }] of Object.entries(FAIXAS)) faixas[faixa] = { max_simultaneas: max, fila_maxima: fila };
+      faixas.pesada.rotas = ROTAS_PESADAS;
+      for (const { tenant } of Object.values(TOKENS)) {
+        tenants[tenant] = {};
+        for (const faixa of Object.keys(FAIXAS)) {
+          const chave = tenant + ' ' + faixa;
+          tenants[tenant][faixa] = { em_andamento: emAndamento[chave] || 0, na_fila: (filas[chave] || []).length };
+        }
+      }
+      return responder(res, 200, { espera_maxima_ms: ESPERA_MAXIMA_MS, faixas, tenants });
     }
     if (caminho === '/chaves' && req.method === 'GET') {
       const estado = { ...chaves };
@@ -123,7 +194,7 @@ http.createServer(async (req, res) => {
       const r = await chamar(`${DONO[nome]}/lab/${nome}/${valor}`, { metodo: 'POST' });
       return responder(res, r.status, { [nome]: r.corpo[nome] });
     }
-    responder(res, 404, { erro: 'painel: use /chaves ou /fila' });
+    responder(res, 404, { erro: 'painel: use /chaves, /fila ou /limite' });
   } catch (erro) {
     responder(res, 503, { erro: 'servico dono da chave esta fora do ar' });
   }
