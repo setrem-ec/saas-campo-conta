@@ -59,13 +59,24 @@ async function conferirIsolamento(dono, vizinho) {
 
   const doDono = await pedir(dono, 'GET', '/entregas/' + id);
   assert.equal(doDono.status, 200, `${dono.nome} não achou a própria entrega ${id} (status ${doDono.status})`);
+  // Um 200 com outra entrega dentro não serve de prova: confere o identificador e o tenant.
+  assert.equal(doDono.dados && doDono.dados.id, id,
+    `${dono.nome} pediu a entrega ${id} e recebeu outra: ${JSON.stringify(doDono.dados)}`);
+  assert.equal(doDono.dados.tenant_id, dono.id,
+    `a entrega ${id}, criada pela ${dono.nome}, veio com o tenant ${doDono.dados.tenant_id}`);
 
-  // 1. Busca por identificador: o vizinho tem de receber 404.
+  // 1. Busca por identificador: o vizinho tem de receber 404, e só a mensagem de erro.
   const doVizinho = await pedir(vizinho, 'GET', '/entregas/' + id);
   assert.notEqual(doVizinho.status, 200,
     `VAZAMENTO: ${vizinho.nome} viu a entrega ${id}, que é da ${dono.nome} (GET /entregas/${id} respondeu 200)`);
   assert.equal(doVizinho.status, 404,
     `resposta inesperada: GET /entregas/${id} como ${vizinho.nome} respondeu ${doVizinho.status}. Não dá para concluir sobre o isolamento`);
+  // O 404 tem de parecer "não existe": nenhum campo da entrega e nenhuma menção ao dono.
+  const campos = Object.keys(doVizinho.dados || {});
+  assert.deepEqual(campos, ['erro'],
+    `VAZAMENTO: o 404 dado à ${vizinho.nome} para a entrega ${id} trouxe mais que a mensagem de erro: ${JSON.stringify(doVizinho.dados)}`);
+  assert.ok(!JSON.stringify(doVizinho.dados).toLowerCase().includes(dono.id),
+    `VAZAMENTO: o 404 dado à ${vizinho.nome} cita a ${dono.nome}: ${JSON.stringify(doVizinho.dados)}`);
 
   // 2. Lista: a do vizinho não pode trazer a entrega do dono, nem linha de outro tenant.
   const lista = await pedir(vizinho, 'GET', '/entregas');
