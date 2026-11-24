@@ -4,13 +4,13 @@
 
 > **Isto não é o seu PI.** É o exemplo público do CampoConta, material de aula. Use o **formato**: o que cada teste prova, de que tipo ele é e se já existe. Os testes do seu produto são seus.
 
-**Escrito em 12/11/2026.** Vale para o tronco deste repositório. O código do produto é o do commit `0deac2a`, mais a fila do gateway (ADR 012).
+**Escrito em 12/11/2026, atualizado em 24/11/2026** (Etapa 3: autorização, robustez, carga e segurança no pipeline). Vale para o tronco deste repositório.
 
 ## O retrato de hoje, sem enfeite
 
 - **A pirâmide tem os três andares, e ainda é fina.** Unidade: 9 testes da cota, sem banco e sem rede. Integração: 2 testes, cada um com uma defesa desligada de propósito. Ponta a ponta: o isolamento e a fila do gateway.
 - **Os testes de integração entram pelo gateway.** Eles isolam uma defesa pelas chaves de laboratório, não por subir um serviço sozinho. Dizem qual defesa segurou; não dizem em que linha está o defeito.
-- **Ainda falta:** a regra da taxa, o contrato do evento, a segurança e a robustez (tabela abaixo).
+- **Ainda falta:** a regra da taxa, o contrato do evento e o evento forjado (tabela abaixo).
 - **Pela rubrica da Etapa 3:** o teste de isolamento está no nível Satisfatório ("automatizado, cobre o cenário principal"). A suíte no pipeline também chegou a ele: há "unidade + integração a cada push". O nível acima pede teste de contrato, que não existe.
 
 ## Os tipos de teste, em uma linha cada
@@ -37,10 +37,12 @@ Fora da pirâmide ficam os testes que não conferem regra de negócio: **seguran
 | Ponta a ponta | Fila do gateway | O pedido acima do limite espera e é atendido; com a fila cheia, o excedente recebe 429 com `Retry-After`; a fila cheia de uma cooperativa não segura a outra | **Existe:** `testes/fila.test.js`. Enche só a faixa pesada | Não |
 | Ponta a ponta | Entrega vira taxa | A entrega registrada aparece como taxa em poucos segundos | Falta | Não |
 | Contrato | Evento `EntregaRegistrada` | Tem os campos que a cobrança usa; um campo renomeado quebra o teste | Falta | Não |
-| Segurança | Token ausente ou inválido | Toda rota do produto responde 401 | Falta | Não |
+| Segurança | Token ausente ou inválido | Toda rota do produto responde 401 | **Existe:** `testes/authz.test.js` (24/11) | Não: o gateway já recusava |
+| Segurança | Cabeçalho de tenant forjado | Um `x-tenant-id` mandado pelo cliente não troca o tenant em `/eu`, `/cotas` e `/relatorio`. **Isolamento** | **Existe:** o mesmo arquivo | Não |
+| Segurança | Segredos e dependências | Nenhum segredo no histórico (TruffleHog) e nenhuma vulnerabilidade alta (`npm audit`) | **Existe:** dois passos do pipeline, antes dos testes (24/11) | Não se aplica |
 | Segurança | Evento forjado (defeito C1) | A cobrança recusa evento que não veio da produção | Falta | **Sim:** o teste falha hoje |
-| Robustez | Endereço malformado (defeito C2) | O gateway responde erro e continua no ar | Falta | **Sim:** o teste falha hoje |
-| Carga | k6 em `/cotas` e em `/relatorio-pesado` | O p95 e a taxa de erro contra o limiar | Rodado à mão, em 12/11 (`evidencias/capacidade-2026-11-12.md`) | Não se aplica |
+| Robustez | Endereço malformado (defeito C2, achado S1) | O gateway responde 400 e continua no ar | **Existe:** `testes/robustez.test.js` | **Sim:** `ac2762e` (red, pipeline vermelho) e `c72b2ad` (green) |
+| Carga | k6 em `/cotas` e em `/relatorio-pesado` | O p95 e a taxa de erro contra o limiar | Rodado à mão: capacidade em 12/11 (`evidencias/capacidade-2026-11-12.md`), metas do SLO em 24/11 (`carga-enc14.md`) | Não se aplica |
 
 Os defeitos C1 e C2 estão descritos em `adr/010-defeitos-conhecidos-nao-corrigidos-agora.md`.
 
@@ -54,7 +56,7 @@ Os dois são necessários. Em 12/11/2026, com o filtro do código removido de pr
 
 TDD é escrever o teste antes do código, vê-lo falhar e só então fazê-lo passar. Por isso ele só serve para o que ainda não existe ou está quebrado.
 
-- **É TDD:** a regra da taxa, que ainda não existe; e os defeitos C1 e C2, em que o teste nasce vermelho e o conserto o deixa verde.
+- **É TDD:** a regra da taxa, que ainda não existe; e os defeitos C1 e C2, em que o teste nasce vermelho e o conserto o deixa verde. O C2 já foi assim, em 24/11: veja os commits `red:` e `green:` no histórico.
 - **Não é TDD:** os testes da cota, do isolamento e do evento repetido. O código já funciona, e o teste nasce passando. Eles servem para travar o comportamento: se alguém o quebrar depois, o teste acusa.
 
 Um teste que nunca foi visto falhando não provou que consegue falhar. Para o teste de isolamento, essa prova foi feita à parte, quebrando o isolamento numa branch.
@@ -65,10 +67,10 @@ O plano diz **o quê**: que testes existem e o que cada um prova. O pipeline diz
 
 A ordem certa no pipeline segue o custo. Primeiro a unidade, que termina em segundos e não sobe nada. Depois a integração e a ponta a ponta, com o sistema no ar. Se a unidade falha, não vale a pena subir o resto.
 
-Hoje o pipeline tem um passo só de teste, porque só há um teste. Ele ganha o passo da unidade quando os testes da cota entrarem.
+Hoje o pipeline faz, nesta ordem: segredos no histórico, dependências auditadas, unidade, e só então sobe o produto para a integração e a ponta a ponta.
 
 ## O que este plano não cobre
 
 - **Teste manual.** Os seis experimentos (`aula/enc11/experimentos.md`) continuam sendo a conferência do que ainda não tem teste.
-- **Quanto do código os testes exercitam.** Com um teste só, a medida não diria nada.
+- **Quanto do código os testes exercitam.** A cobertura ainda não é medida.
 - **O produto redesenhado.** Este plano é do sistema que roda hoje.

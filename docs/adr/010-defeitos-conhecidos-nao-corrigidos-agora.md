@@ -49,4 +49,9 @@ O texto acima é a foto de 15/10 e fica como foi escrito. O que mudou desde ent�
 - **As correções não começaram em 20/10.** Elas passaram a entrar junto com a evolução do produto, nesta ordem: C2 primeiro; depois a suíte de testes e o pipeline; depois C1; depois C12, com a taxa em centavos.
 - **Cada correção ganha o seu ADR** quando for feita, e esta lista é atualizada no mesmo commit.
 
-**Histórico:** 12/11/2026: nasceu a seção "Situação em 12/11/2026"; o texto do C13 passou a dizer que o código aceita também o corpo em JSON. 12/11/2026: o ADR 012 mudou o limite do gateway. O C4 deixa de valer para duas cooperativas (8 + 8 relatórios é menor que 20 conexões) e volta com a terceira; o C10 continua como está. O texto das duas linhas não mudou.
+## Situação em 24/11/2026
+
+- **C2 corrigido**, com o teste antes do código: `ac2762e` (red) e `c72b2ad` (green). Um endereço malformado recebe 400 nos três serviços, e o processo não cai (`../seguranca-enc15.md`, achado S1; teste em `testes/robustez.test.js`). A correção não ganhou ADR próprio: ela não mudou nenhuma decisão de arquitetura, só pôs a leitura do endereço dentro do tratamento de erro.
+- **C1 e C6 seguem abertos** e viraram o achado planejado P2 de `../seguranca-enc15.md`, com prazo na Etapa 4. O C7 (a `outbox` sem política por linha) segue nas lacunas de `../lgpd.md`.
+
+**Histórico:** 24/11/2026: nasceu a seção "Situação em 24/11/2026" (C2 corrigido). 12/11/2026: nasceu a seção "Situação em 12/11/2026"; o texto do C13 passou a dizer que o código aceita também o corpo em JSON. 12/11/2026: o ADR 012 mudou o limite do gateway. O C4 deixa de valer para duas cooperativas (8 + 8 relatórios é menor que 20 conexões) e volta com a terceira; o C10 continua como está. O texto das duas linhas não mudou.

@@ -1,6 +1,6 @@
 # Documentação de arquitetura do CampoConta
 
-Esta pasta é o exemplo do que a sua unidade de PI entrega nas Etapas 1 e 2, e do começo da Etapa 3, feito para o CampoConta. **Copie o formato, não o conteúdo:** o seu produto tem outro problema, outros números e outras decisões. Copiar uma decisão daqui sem o contexto do seu produto é avaliado como cópia de material de aula.
+Esta pasta é o exemplo do que a sua unidade de PI entrega nas Etapas 1, 2 e 3, e do começo da Etapa 4, feito para o CampoConta. **Copie o formato, não o conteúdo:** o seu produto tem outro problema, outros números e outras decisões. Copiar uma decisão daqui sem o contexto do seu produto é avaliado como cópia de material de aula.
 
 ## O que o seu repositório precisa ter, e o exemplo de cada item
 
@@ -18,9 +18,14 @@ Esta pasta é o exemplo do que a sua unidade de PI entrega nas Etapas 1 e 2, e d
 | 2 | 2.5 ADRs atualizados, no mínimo mais 2, incluindo a comunicação entre os serviços | `adr/004` (comunicação) e `adr/005` a `adr/010` |
 | 2 | Declaração de uso de IA, junto com a entrega | `uso-de-ia.md` |
 | 3 | Plano de testes em três colunas (Encontro 12) | `plano-de-testes.md` |
-| 3 | 3.1 Suíte de testes rodando a cada push | `adr/011`, `.github/workflows/testes.yml` e a aba Actions do repositório. **Ainda incompleto:** só há teste de ponta a ponta; faltam unidade e integração |
-| 3 | 3.2 Teste automatizado que prova o isolamento | `testes/isolamento.test.js`, que cobre a leitura de entregas, nos dois sentidos |
+| 3 | 3.1 Suíte de testes rodando a cada push | `adr/011`, `.github/workflows/testes.yml` e a aba Actions do repositório: unidade (`producao/testes/`), integração e ponta a ponta (`testes/`). A execução vermelha causada por teste está no histórico: o commit `red:` do achado S1 |
+| 3 | 3.2 Teste automatizado que prova o isolamento | `testes/isolamento.test.js` (leitura de entregas, nos dois sentidos), `testes/integracao.test.js` (a política do banco sozinha) e `testes/authz.test.js` (cabeçalho de tenant forjado) |
+| 3 | 3.3 Relatório de carga (k6) | `carga-enc14.md` |
+| 3 | 3.4 SLO de produto | `slo.md`: os mesmos números dos limiares do k6 |
+| 3 | 3.5 Verificação de segurança | `seguranca-enc15.md`: rotas, segredos, dependências, achados com tratamento e LGPD |
 | 3 | "O pipeline falha se um teste quebra", demonstrado | `evidencias/pipeline-vermelho-2026-11-12.md` e a branch `demo/isolamento-quebrado` |
+| 3 | Gatilho de revisão num ADR (26/11) | `adr/002`, seção "Gatilho de revisão" |
+| 4 | 4.4 Custo com memória de cálculo (rascunho de 26/11) | `custo-por-tenant.md` |
 
 A `especificacao.md` não é cobrada; mostra como descrever o que o sistema promete antes de mudá-lo.
 

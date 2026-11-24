@@ -30,4 +30,8 @@ Pool por padrão, com isolamento em duas camadas (filtro por tenant no código *
 - **Piora:** o modelo híbrido exige que o serviço descubra **onde** os dados de cada tenant moram antes de consultar (uma tabela "tenant → conexão"). Hoje o código conecta sempre no mesmo banco. Quando o primeiro cliente contratar o plano à parte, isso vira trabalho e um ADR próprio.
 - **Piora:** com dois modelos convivendo, toda mudança de tabela precisa ser aplicada no pool e em cada schema ou banco dedicado.
 
-**Histórico:** 12/11/2026: a Decisão passou a caber em uma frase, e o detalhe desceu para o Contexto; saiu a afirmação de que toda linha tem `tenant_id` (a `evento_processado` não tem); a referência ao encontro de precificação perdeu o número.
+## Gatilho de revisão
+
+**Se passar de 120 cooperativas por 3 meses, reabrir a decisão do banco.** Com 120, o banco do pool sai da configuração A e vai para a B (custo fixo de R$ 398 a mais por mês, `../custo-por-tenant.md`), e o vizinho barulhento passa a dividir as mesmas conexões com três vezes mais clientes. Como conferir: contar os tenants ativos no fim de cada mês. Hoje eles estão na lista `TOKENS` de `gateway/server.js`, e são 2. A ação é escrever um ADR novo, que compare o pool na configuração B com o schema por tenant para os maiores. O ADR novo pode manter esta decisão.
+
+**Histórico:** 24/11/2026: entrou o gatilho de revisão (Etapa 3). 12/11/2026: a Decisão passou a caber em uma frase, e o detalhe desceu para o Contexto; saiu a afirmação de que toda linha tem `tenant_id` (a `evento_processado` não tem); a referência ao encontro de precificação perdeu o número.
