@@ -22,7 +22,12 @@ async function lerEntrada(req) {
   let corpo = '';
   for await (const pedaco of req) corpo += pedaco;
   if (corpo.trim()) {
-    try { Object.assign(dados, JSON.parse(corpo)); } catch { /* corpo nao-JSON: ignora */ }
+    // Copia campo a campo, sem "__proto__": com Object.assign, um corpo {"__proto__": {...}}
+    // trocaria o prototipo de "dados" (achado S3 de docs/seguranca-enc15.md).
+    try {
+      for (const [chave, valor] of Object.entries(JSON.parse(corpo)))
+        if (chave !== '__proto__') dados[chave] = valor;
+    } catch { /* corpo nao-JSON (ou JSON que nao e objeto): ignora */ }
   }
   return { caminho: url.pathname, dados };
 }

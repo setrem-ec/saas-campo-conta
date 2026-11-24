@@ -12,17 +12,20 @@ jobs:
     steps:
       # fetch-depth 0 traz o histórico inteiro: a varredura de segredos lê todos os commits,
       # porque apagar o segredo do arquivo não o apaga do histórico.
-      - uses: actions/checkout@v4
+      # Action travada pelo hash do commit, não pela tag: tag pode ser movida para outro código
+      # (ataque de cadeia de suprimento). O comentário diz a versão; atualizar é trocar os dois.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
       # Segurança antes dos testes (docs/seguranca-enc15.md). Os dois passos falham o pipeline:
       # segredo no histórico (TruffleHog, sem testar a chave no provedor) e dependência com
       # vulnerabilidade alta ou crítica (npm audit, contra a versão travada no package-lock.json).
       - name: Segredos no histórico
-        run: docker run --rm -v "$PWD:/repo" trufflesecurity/trufflehog:3.100.1 git file:///repo --no-verification --no-update --fail
+        # Imagem travada pelo digest, pela mesma razão das actions (versão 3.100.1).
+        run: docker run --rm -v "$PWD:/repo" trufflesecurity/trufflehog@sha256:9c7a8325d43a4af2960d3f21d61a08981d8a1bf0542e007efa2e47097e386452 git file:///repo --no-verification --no-update --fail
       - name: Dependências auditadas
         run: npm audit --audit-level=high
       # Sem este passo, o pipeline ficaria verde com zero testes:
