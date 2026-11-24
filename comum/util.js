@@ -6,10 +6,18 @@ function log(servico, msg) {
   console.log(`${hora} [${servico}] ${msg}`);
 }
 
+// Endereco malformado (ex.: "//") faz o new URL lancar. Aqui vira null, e quem chamou
+// responde 400: uma excecao fora do try derrubaria o processo, e nada o sobe de volta
+// (achado S1 de docs/seguranca-enc15.md).
+function lerUrl(req) {
+  try { return new URL(req.url, 'http://x'); } catch { return null; }
+}
+
 // Aceita parametros na URL (?kg=400) ou corpo JSON. A URL existe para o curl do
-// PowerShell, que estraga aspas de JSON.
+// PowerShell, que estraga aspas de JSON. Endereco malformado: caminho null.
 async function lerEntrada(req) {
-  const url = new URL(req.url, 'http://x');
+  const url = lerUrl(req);
+  if (!url) return { caminho: null, dados: {} };
   const dados = Object.fromEntries(url.searchParams);
   let corpo = '';
   for await (const pedaco of req) corpo += pedaco;
@@ -39,4 +47,4 @@ async function chamar(url, { metodo = 'GET', cabecalhos = {}, corpo, timeoutMs =
 
 const dormir = ms => new Promise(r => setTimeout(r, ms));
 
-module.exports = { log, lerEntrada, responder, chamar, dormir };
+module.exports = { log, lerUrl, lerEntrada, responder, chamar, dormir };
