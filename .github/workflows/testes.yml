@@ -1,4 +1,5 @@
-# Roda a suíte a cada push. Fica vermelho se um teste quebrar.
+# Roda a suíte a cada push. Fica vermelho se um teste quebrar, se houver segredo no
+# histórico ou se uma dependência tiver vulnerabilidade alta.
 # Sobe o produto do zero, numa máquina limpa, e só testa: não publica nada.
 name: testes
 on: [push]
@@ -9,10 +10,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      # fetch-depth 0 traz o histórico inteiro: a varredura de segredos lê todos os commits,
+      # porque apagar o segredo do arquivo não o apaga do histórico.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      # Segurança antes dos testes (docs/seguranca-enc15.md). Os dois passos falham o pipeline:
+      # segredo no histórico (TruffleHog, sem testar a chave no provedor) e dependência com
+      # vulnerabilidade alta ou crítica (npm audit, contra a versão travada no package-lock.json).
+      - name: Segredos no histórico
+        run: docker run --rm -v "$PWD:/repo" trufflesecurity/trufflehog:3.100.1 git file:///repo --no-verification --no-update --fail
+      - name: Dependências auditadas
+        run: npm audit --audit-level=high
       # Sem este passo, o pipeline ficaria verde com zero testes:
       # o "node --test" termina em sucesso quando não acha nenhum arquivo.
       - name: Confere que há testes para rodar
