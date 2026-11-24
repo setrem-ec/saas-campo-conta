@@ -1,12 +1,12 @@
 # Verificação de segurança — CampoConta
 
-Entregável 3.5 da Etapa 3, no formato do roteiro de 19/11. Verificado em 24/11/2026, no commit `f5eb325` e nos seguintes. O "15" no nome vem da pasta do encontro: o nome do arquivo fica como o roteiro pede.
+Entregável 3.5 da Etapa 3, no formato do roteiro de 19/11. Verificado em 24/11/2026, do commit `ac2762e` ao `0b69966`. O "15" no nome vem da pasta do encontro: o nome do arquivo fica como o roteiro pede.
 
 **Resumo:** foram 5 achados corrigidos (S1 a S5), 3 planejados (P1 a P3) e 4 falsos positivos explicados.
 
 ## 1. Acesso por tenant
 
-Execução vermelha do pipeline: [RUN_VERMELHO] (o teste do achado S1, antes do conserto). Depois do conserto, a execução ficou verde: [RUN_VERDE].
+Execução vermelha do pipeline: <https://github.com/setrem-ec/saas-campo-conta/actions/runs/45483735230> (commit `ac2762e`, 24/11/2026) (o teste do achado S1, antes do conserto). Depois do conserto, a execução ficou verde: <https://github.com/setrem-ec/saas-campo-conta/actions/runs/45483904413> (commit `0b69966`).
 
 | Rota | Exige identidade? | De onde vem o tenant? | Filtra por tenant? | Qual teste cobre? |
 |------|-------------------|-----------------------|--------------------|-------------------|
