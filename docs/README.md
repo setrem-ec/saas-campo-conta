@@ -1,6 +1,6 @@
 # Documentação de arquitetura do CampoConta
 
-Esta pasta é o exemplo do que a sua unidade de PI entrega nas Etapas 1, 2 e 3, e do começo da Etapa 4, feito para o CampoConta. **Copie o formato, não o conteúdo:** o seu produto tem outro problema, outros números e outras decisões. Copiar uma decisão daqui sem o contexto do seu produto é avaliado como cópia de material de aula.
+Esta pasta é o exemplo do que a sua unidade de PI entrega nas Etapas 1, 2 e 3, e da maior parte da Etapa 4, feito para o CampoConta. **Copie o formato, não o conteúdo:** o seu produto tem outro problema, outros números e outras decisões. Copiar uma decisão daqui sem o contexto do seu produto é avaliado como cópia de material de aula.
 
 ## O que o seu repositório precisa ter, e o exemplo de cada item
 
@@ -25,6 +25,8 @@ Esta pasta é o exemplo do que a sua unidade de PI entrega nas Etapas 1, 2 e 3, 
 | 3 | 3.5 Verificação de segurança | `seguranca-enc15.md`: rotas, segredos, dependências, achados com tratamento e LGPD |
 | 3 | "O pipeline falha se um teste quebra", demonstrado | `evidencias/pipeline-vermelho-2026-11-12.md` e a branch `demo/isolamento-quebrado` |
 | 3 | Gatilho de revisão num ADR (26/11) | `adr/002`, seção "Gatilho de revisão" |
+| 4 | 4.2 Repositório final: tag ou release, README completo | o `README.md` da raiz e a release `etapa-4`, na página **Releases** do repositório |
+| 4 | 4.3 Demo com 2 tenants, isolamento nos dois sentidos | `demo.md` |
 | 4 | 4.4 Custo com memória de cálculo (rascunho de 26/11) | `custo-por-tenant.md` |
 
 A `especificacao.md` não é cobrada; mostra como descrever o que o sistema promete antes de mudá-lo.
