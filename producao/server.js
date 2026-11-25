@@ -123,6 +123,7 @@ async function relay() {
 
 http.createServer(async (req, res) => {
   const { caminho, dados } = await lerEntrada(req);
+  if (caminho === null) return responder(res, 400, { erro: 'endereco invalido' });
   const tenant = req.headers['x-tenant-id'];
   const rid = req.headers['x-request-id'] || '-';
   try {

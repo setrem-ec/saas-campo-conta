@@ -1,0 +1,4 @@
+node_modules/
+# Variáveis de ambiente locais: segredo de verdade nunca vai para o commit (docs/seguranca-enc15.md, achado S5).
+.env
+.env.*

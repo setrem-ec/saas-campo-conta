@@ -6,7 +6,7 @@
 // A porta 8081 e o painel do laboratorio (chaves dos experimentos).
 const http = require('http');
 const crypto = require('crypto');
-const { log, lerEntrada, responder, chamar } = require('../comum/util');
+const { log, lerUrl, lerEntrada, responder, chamar } = require('../comum/util');
 
 const S = 'gateway';
 const PRODUCAO = process.env.PRODUCAO_URL;
@@ -111,7 +111,9 @@ async function relatorio(quem, cabecalhos) {
 
 http.createServer(async (req, res) => {
   const inicio = Date.now();
-  const caminho = new URL(req.url, 'http://x').pathname;
+  const url = lerUrl(req);
+  if (!url) return responder(res, 400, { erro: 'endereco invalido' });
+  const caminho = url.pathname;
   if (caminho === '/saude') return responder(res, 200, { gateway: 'ok' });
 
   const quem = identificar(req);
@@ -166,7 +168,9 @@ http.createServer(async (req, res) => {
 const DONO = { 'limite-tenant': null, 'filtro-app': PRODUCAO, 'relay-duplica': PRODUCAO, 'idempotencia': COBRANCA };
 
 http.createServer(async (req, res) => {
-  const caminho = new URL(req.url, 'http://x').pathname;
+  const url = lerUrl(req);
+  if (!url) return responder(res, 400, { erro: 'endereco invalido' });
+  const caminho = url.pathname;
   try {
     if (caminho === '/fila') {
       const r = await chamar(PRODUCAO + '/interno/fila');

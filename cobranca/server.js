@@ -56,6 +56,7 @@ async function listarTaxas(tenant) {
 
 http.createServer(async (req, res) => {
   const { caminho, dados } = await lerEntrada(req);
+  if (caminho === null) return responder(res, 400, { erro: 'endereco invalido' });
   const rid = req.headers['x-request-id'] || '-';
   try {
     if (caminho === '/lab' && req.method === 'GET') return responder(res, 200, chaves);

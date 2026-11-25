@@ -1,0 +1,8 @@
+{
+  "name": "campoconta",
+  "private": true,
+  "description": "CampoConta de referência: a dependência do produto fica declarada aqui, com a versão travada no package-lock.json.",
+  "dependencies": {
+    "pg": "8.23.1"
+  }
+}
