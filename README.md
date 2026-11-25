@@ -139,7 +139,7 @@ Para testar outro número sem editar nada, no PowerShell: `$env:MAX_PESADAS = "2
 
 ## Demo com as duas cooperativas
 
-O roteiro da demo da Etapa 4 está em `docs/demo.md`: onze comandos, do sistema zerado ao isolamento mostrado nos dois sentidos. A Alvorada registra uma entrega e a Buricá não a vê; a Buricá registra outra e a Alvorada não a vê. Leva cerca de 3 minutos.
+O roteiro da demo da Etapa 4 está em `docs/demo.md`: onze comandos, do sistema zerado ao isolamento mostrado nos dois sentidos. A Alvorada registra uma entrega e a Buricá não a vê; a Buricá registra outra e a Alvorada não a vê. Na defesa, a demo tem 3 minutos.
 
 ## Rodar os testes
 
