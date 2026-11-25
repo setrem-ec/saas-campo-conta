@@ -11,12 +11,13 @@ Cada arquivo registra uma decisão no formato do Encontro 02: **contexto** (com 
 | [005](005-outbox-em-tabela-sem-broker.md) | A outbox é uma tabela do banco, sem broker de mensagens | 2.5 |
 | [006](006-idempotencia-no-consumidor.md) | A cobrança descarta evento repetido pelo identificador | 2.5 |
 | [007](007-relatorio-por-composicao-no-gateway.md) | Relatório por composição no gateway, com prazo e resposta parcial | 2.5 |
-| [008](008-limite-de-pedidos-simultaneos-por-tenant.md) | Limite de pedidos simultâneos por tenant, no gateway | 2.5 |
+| [008](008-limite-de-pedidos-simultaneos-por-tenant.md) | Limite de pedidos simultâneos por tenant, no gateway. **Substituído pelo 012** | 2.5 |
 | [009](009-ambiente-docker-compose-local.md) | Ambiente: Docker Compose local | 2.2 (escolha do ambiente em ADR) |
 | [010](010-defeitos-conhecidos-nao-corrigidos-agora.md) | Defeitos conhecidos que decidimos não corrigir agora | 2.5 (ADR de "não fazer" também vale) |
 | [011](011-a-suite-roda-a-cada-push.md) | A suíte roda a cada push, numa máquina limpa | 3.1 (suíte no pipeline) |
+| [012](012-fila-com-teto-e-duas-faixas-no-gateway.md) | O excedente espera numa fila com teto, em duas faixas por tenant. Decisão revista com medição | 3.3 e 3.4 (carga e meta), e o nível Excelente de "Carga e SLO": gargalo com hipótese de correção |
 
-Os ADRs 001 a 010 descrevem o código do produto, que é o do commit `0deac2a`. O ADR 011 é o primeiro escrito no dia da decisão. O produto está sendo redesenhado; as decisões novas entram aqui como ADRs novos, no dia em que forem tomadas e depois de lidas por alguém de fora. Nenhum dos ADRs 001 a 010 será apagado: o que for revisto ganha o status "substituído pelo ADR tal". Um ADR alterado depois de escrito diz isso na linha **Histórico**, no fim do arquivo.
+Os ADRs 001 a 010 descrevem o código do produto como ele era no commit `0deac2a`. O ADR 011 é o primeiro escrito no dia da decisão. O ADR 012 é o primeiro que muda o código do produto e o primeiro que substitui outro (o 008). O produto está sendo redesenhado; as decisões novas entram aqui como ADRs novos, no dia em que forem tomadas e depois de lidas por alguém de fora. Nenhum dos ADRs 001 a 010 será apagado: o que for revisto ganha o status "substituído pelo ADR tal". Um ADR alterado depois de escrito diz isso na linha **Histórico**, no fim do arquivo.
 
 ## Uma confissão, que também é lição
 

@@ -20,7 +20,7 @@ services:
     image: campoconta-base
     command: ["node", "/app/producao/server.js"]
     volumes: ["./producao:/app/producao:ro", "./comum:/app/comum:ro"]
-    environment: { DB_HOST: producao-db, COBRANCA_URL: "http://cobranca:3000" }
+    environment: { DB_HOST: producao-db, COBRANCA_URL: "http://cobranca:3000", POOL_MAX: "${POOL_MAX:-20}" }
     depends_on: { producao-db: { condition: service_healthy } }
     stop_grace_period: 1s
 
@@ -38,7 +38,18 @@ services:
     image: campoconta-base
     command: ["node", "/app/gateway/server.js"]
     volumes: ["./gateway:/app/gateway:ro", "./comum:/app/comum:ro"]
-    environment: { PRODUCAO_URL: "http://producao:3000", COBRANCA_URL: "http://cobranca:3000" }
+    # Limite por tenant com fila, em duas faixas (ADR 012): geral (MAX_SIMULTANEAS, FILA_MAXIMA)
+    # e pesada (MAX_PESADAS, FILA_PESADAS). Para trocar sem editar, no PowerShell:
+    #   $env:MAX_PESADAS = "2"; docker compose up -d
+    environment:
+      PRODUCAO_URL: "http://producao:3000"
+      COBRANCA_URL: "http://cobranca:3000"
+      MAX_SIMULTANEAS: "${MAX_SIMULTANEAS:-40}"
+      FILA_MAXIMA: "${FILA_MAXIMA:-80}"
+      MAX_PESADAS: "${MAX_PESADAS:-8}"
+      FILA_PESADAS: "${FILA_PESADAS:-64}"
+      ROTAS_PESADAS: "${ROTAS_PESADAS:-/relatorio-pesado}"
+      ESPERA_MAXIMA_MS: "${ESPERA_MAXIMA_MS:-5000}"
     ports: ["127.0.0.1:8080:8080", "127.0.0.1:8081:8081"]
     depends_on: [producao, cobranca]
     stop_grace_period: 1s

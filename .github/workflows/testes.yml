@@ -19,8 +19,10 @@ jobs:
         run: ls testes/*.test.js
       - name: Sobe o produto
         run: docker compose up -d --build --wait
+      # Um arquivo de teste por vez: o teste da fila enche o limite de um tenant,
+      # e não pode rodar junto com outro que use o mesmo tenant.
       - name: Roda a suíte
-        run: node --test
+        run: node --test --test-concurrency=1
       - name: Mostra o log se falhar
         if: failure()
         run: docker compose logs --tail=50

@@ -1,5 +1,7 @@
 # Os seis experimentos — Encontro de 15/10
 
+> **Aviso de 12/11/2026.** Este roteiro é o registro do encontro de 15/10. Depois dele, o limite do gateway mudou (ADR 012), e o **experimento 6** passou a dar outro resultado: sem o limite, a Buricá espera cerca de 1,6 s (eram 6 s); com o limite, os 60 relatórios da Alvorada são atendidos (eram 3). Os outros cinco experimentos não mudaram.
+
 **O que é:** os comandos e as perguntas dos experimentos do encontro de 15/10: abertura (19h15), experimentos cada um na sua máquina e fechamento (21h15). Sem o sistema rodando, sente ao lado de quem tem; o registro continua individual. **O que não é:** o lugar das respostas. Elas vão no `registro-enc11.md` (nesta mesma pasta), copiado para o repositório do seu PI como `docs/registro-enc11-<seu-primeiro-nome>.md`. Dúvida: levante a mão; o professor circula.
 
 - [ ] Sistema no ar (passo "Antes do encontro" do `README.md` da raiz do repositório).

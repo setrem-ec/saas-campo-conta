@@ -4,11 +4,11 @@
 
 > **Isto não é o seu PI.** É o exemplo público do CampoConta, material de aula. Use o **formato**: o que cada teste prova, de que tipo ele é e se já existe. Os testes do seu produto são seus.
 
-**Escrito em 12/11/2026.** Vale para o tronco deste repositório. O código do produto é o do commit `0deac2a`.
+**Escrito em 12/11/2026.** Vale para o tronco deste repositório. O código do produto é o do commit `0deac2a`, mais a fila do gateway (ADR 012).
 
 ## O retrato de hoje, sem enfeite
 
-- **Existe um teste automatizado.** Ele entra pelo gateway, então é de ponta a ponta: o tipo mais caro e o que menos diz onde está o defeito.
+- **Existem dois testes automatizados.** Os dois entram pelo gateway, então são de ponta a ponta: o tipo mais caro e o que menos diz onde está o defeito.
 - **Não há teste de unidade nem de integração.** A pirâmide está de cabeça para baixo. É o começo do "cone de sorvete" do Encontro 12.
 - **Pela rubrica da Etapa 3:** o teste de isolamento está no nível Satisfatório ("automatizado, cobre o cenário principal"). A suíte no pipeline ainda não: a rubrica pede "unidade + integração a cada push", e só há ponta a ponta.
 
@@ -33,12 +33,13 @@ Fora da pirâmide ficam os testes que não conferem regra de negócio: **seguran
 | Integração | Política por linha do banco | Com o filtro do código desligado, a lista não traz linha de outra cooperativa. **Isolamento** | Falta | Não |
 | Integração | Evento repetido | O mesmo evento, entregue duas vezes, gera uma taxa só | Falta | Não |
 | Ponta a ponta | Isolamento na leitura de entregas | A Buricá não vê a entrega da Alvorada, nem pela busca nem pela lista; e o inverso. **Isolamento** | **Existe:** `testes/isolamento.test.js` | Não |
+| Ponta a ponta | Fila do gateway | O pedido acima do limite espera e é atendido; com a fila cheia, o excedente recebe 429 com `Retry-After`; a fila cheia de uma cooperativa não segura a outra | **Existe:** `testes/fila.test.js`. Enche só a faixa pesada | Não |
 | Ponta a ponta | Entrega vira taxa | A entrega registrada aparece como taxa em poucos segundos | Falta | Não |
 | Contrato | Evento `EntregaRegistrada` | Tem os campos que a cobrança usa; um campo renomeado quebra o teste | Falta | Não |
 | Segurança | Token ausente ou inválido | Toda rota do produto responde 401 | Falta | Não |
 | Segurança | Evento forjado (defeito C1) | A cobrança recusa evento que não veio da produção | Falta | **Sim:** o teste falha hoje |
 | Robustez | Endereço malformado (defeito C2) | O gateway responde erro e continua no ar | Falta | **Sim:** o teste falha hoje |
-| Carga | k6 em `/cotas` e em `/relatorio-pesado` | O p95 e a taxa de erro contra o limiar | Rodado à mão, em aula | Não se aplica |
+| Carga | k6 em `/cotas` e em `/relatorio-pesado` | O p95 e a taxa de erro contra o limiar | Rodado à mão, em 12/11 (`evidencias/capacidade-2026-11-12.md`) | Não se aplica |
 
 Os defeitos C1 e C2 estão descritos em `adr/010-defeitos-conhecidos-nao-corrigidos-agora.md`.
 
