@@ -16,13 +16,17 @@ jobs:
       # Sem este passo, o pipeline ficaria verde com zero testes:
       # o "node --test" termina em sucesso quando não acha nenhum arquivo.
       - name: Confere que há testes para rodar
-        run: ls testes/*.test.js
+        run: ls producao/testes/*.test.js testes/*.test.js
+      # A base da pirâmide primeiro: a regra sozinha, sem banco e sem rede. Termina em 1 segundo.
+      # Se a regra quebrou, o pipeline para aqui, antes de gastar tempo subindo o produto.
+      - name: Testes de unidade
+        run: node --test "producao/testes/*.test.js"
       - name: Sobe o produto
         run: docker compose up -d --build --wait
       # Um arquivo de teste por vez: o teste da fila enche o limite de um tenant,
       # e não pode rodar junto com outro que use o mesmo tenant.
-      - name: Roda a suíte
-        run: node --test --test-concurrency=1
+      - name: Testes com o produto no ar
+        run: node --test --test-concurrency=1 "testes/*.test.js"
       - name: Mostra o log se falhar
         if: failure()
         run: docker compose logs --tail=50

@@ -8,9 +8,10 @@
 
 ## O retrato de hoje, sem enfeite
 
-- **Existem dois testes automatizados.** Os dois entram pelo gateway, então são de ponta a ponta: o tipo mais caro e o que menos diz onde está o defeito.
-- **Não há teste de unidade nem de integração.** A pirâmide está de cabeça para baixo. É o começo do "cone de sorvete" do Encontro 12.
-- **Pela rubrica da Etapa 3:** o teste de isolamento está no nível Satisfatório ("automatizado, cobre o cenário principal"). A suíte no pipeline ainda não: a rubrica pede "unidade + integração a cada push", e só há ponta a ponta.
+- **A pirâmide tem os três andares, e ainda é fina.** Unidade: 9 testes da cota, sem banco e sem rede. Integração: 2 testes, cada um com uma defesa desligada de propósito. Ponta a ponta: o isolamento e a fila do gateway.
+- **Os testes de integração entram pelo gateway.** Eles isolam uma defesa pelas chaves de laboratório, não por subir um serviço sozinho. Dizem qual defesa segurou; não dizem em que linha está o defeito.
+- **Ainda falta:** a regra da taxa, o contrato do evento, a segurança e a robustez (tabela abaixo).
+- **Pela rubrica da Etapa 3:** o teste de isolamento está no nível Satisfatório ("automatizado, cobre o cenário principal"). A suíte no pipeline também chegou a ele: há "unidade + integração a cada push". O nível acima pede teste de contrato, que não existe.
 
 ## Os tipos de teste, em uma linha cada
 
@@ -27,11 +28,11 @@ Fora da pirâmide ficam os testes que não conferem regra de negócio: **seguran
 
 | Tipo | Teste | O que prova | Estado | Nasce por TDD? |
 |---|---|---|---|---|
-| Unidade | Cota no limite exato | Entregar até o limite passa; 1 kg a mais é recusado | Falta | Não: a regra já funciona |
-| Unidade | Cota com peso inválido | Zero, negativo e fração são recusados, e a cota não muda | Falta | Não |
+| Unidade | Cota no limite exato | Entregar até o limite passa; 1 kg a mais é recusado, e a cota não muda | **Existe:** `producao/testes/cota.test.js` | Não: a regra já funciona |
+| Unidade | Cota com peso inválido | Zero, negativo, fração e texto são recusados, e a cota não muda | **Existe:** o mesmo arquivo | Não |
 | Unidade | Regra da taxa | Entra depois do encontro de 19/11 | Falta | Sim |
-| Integração | Política por linha do banco | Com o filtro do código desligado, a lista não traz linha de outra cooperativa. **Isolamento** | Falta | Não |
-| Integração | Evento repetido | O mesmo evento, entregue duas vezes, gera uma taxa só | Falta | Não |
+| Integração | Política por linha do banco | Com o filtro do código desligado, a lista não traz linha de outra cooperativa. **Isolamento** | **Existe:** `testes/integracao.test.js` | Não |
+| Integração | Evento repetido | O mesmo evento, entregue duas vezes, gera uma taxa só. Com a idempotência desligada, o teste falha: conferido em 13/11/2026 | **Existe:** o mesmo arquivo | Não |
 | Ponta a ponta | Isolamento na leitura de entregas | A Buricá não vê a entrega da Alvorada, nem pela busca nem pela lista; e o inverso. **Isolamento** | **Existe:** `testes/isolamento.test.js` | Não |
 | Ponta a ponta | Fila do gateway | O pedido acima do limite espera e é atendido; com a fila cheia, o excedente recebe 429 com `Retry-After`; a fila cheia de uma cooperativa não segura a outra | **Existe:** `testes/fila.test.js`. Enche só a faixa pesada | Não |
 | Ponta a ponta | Entrega vira taxa | A entrega registrada aparece como taxa em poucos segundos | Falta | Não |
@@ -47,7 +48,7 @@ Os defeitos C1 e C2 estão descritos em `adr/010-defeitos-conhecidos-nao-corrigi
 
 Em dois lugares, de propósito. O teste de ponta a ponta confere o que quem usa o produto enxerga. O de integração confere a segunda camada sozinha, a política por linha do banco (ADR 002).
 
-Os dois são necessários. Em 12/11/2026, com o filtro do código removido de propósito, o teste de ponta a ponta continuou verde: o banco segurou, e o teste não tinha como dizer que uma das duas camadas tinha caído. O registro está em `evidencias/pipeline-vermelho-2026-11-12.md`.
+Os dois são necessários. Em 12/11/2026, com o filtro do código removido de propósito, o teste de ponta a ponta continuou verde: o banco segurou, e o teste não tinha como dizer que uma das duas camadas tinha caído. O teste de integração, de 13/11, confere a camada do banco sozinha. A camada do código sozinha ainda não tem teste: para isso seria preciso desligar a política do banco, e não há chave para isso. O registro está em `evidencias/pipeline-vermelho-2026-11-12.md`.
 
 ## O que é TDD aqui, e o que não é
 

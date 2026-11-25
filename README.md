@@ -134,15 +134,23 @@ Para testar outro número sem editar nada, no PowerShell: `$env:MAX_PESADAS = "2
 - **Login de verdade.** O token é fixo.
 - **Broker de mensagens.** A fila é uma tabela (a `outbox`), porque há um produtor e um consumidor. Quando trocar a tabela por um broker é decisão de arquitetura, discutida em `aula/enc11/o-que-e-microsservico.md`. Operar um broker gerenciado é assunto de Cloud Computing.
 - **Os contextos Associados e Relatórios** do mapa do Encontro 08. Dois serviços de domínio bastam para mostrar a conversa.
-- **A suíte completa.** Há dois testes, o de isolamento e o da fila do gateway, e o pipeline que os roda (seção "Rodar os testes"). Teste de unidade, de contrato e de segurança entram na Unidade 4, sobre este mesmo sistema.
+- **A suíte completa.** Há testes de unidade da cota e três arquivos de teste com o sistema no ar, e o pipeline que os roda (seção "Rodar os testes"). Teste de unidade, de contrato e de segurança entram na Unidade 4, sobre este mesmo sistema.
 - **Kubernetes.** O Compose é só a bancada.
 
 ## Rodar os testes
 
-Com o sistema no ar, a suíte confere duas coisas: que uma cooperativa não vê a entrega da outra, nos dois sentidos, e que o pedido acima do limite espera na fila em vez de falhar.
+A suíte tem dois andares.
+
+**Unidade:** a regra da cota sozinha, sem banco e sem rede. Não precisa do sistema no ar e termina em 1 segundo. O esperado é `pass 9`.
 
 ```powershell
-node --test --test-concurrency=1
+node --test "producao/testes/*.test.js"
+```
+
+**Com o sistema no ar:** três arquivos. O de isolamento confere que uma cooperativa não vê a entrega da outra. O de integração desliga uma defesa de cada vez e confere que a outra segura: a política do banco sem o filtro do código, e a cobrança recebendo o mesmo evento duas vezes. O da fila confere que o pedido acima do limite espera em vez de falhar. O esperado é `pass 10`, em cerca de 12 segundos.
+
+```powershell
+node --test --test-concurrency=1 "testes/*.test.js"
 ```
 
 O `--test-concurrency=1` roda um arquivo de teste por vez. Sem ele, os dois arquivos rodam juntos e um enche a fila que o outro está medindo.
@@ -153,7 +161,7 @@ Não tem o Node 22 instalado? Rode por dentro do Compose, só com o Docker:
 docker compose run --rm -v "./testes:/app/testes:ro" -w /app/testes ferramentas node --test --test-concurrency=1
 ```
 
-O esperado é `pass 7` e `fail 0`, em cerca de 10 segundos. Cada execução registra duas entregas de 1 kg e as duas taxas que elas geram; `docker compose down -v` volta aos dados de exemplo.
+Esse comando roda só os testes com o sistema no ar. Cada execução registra quatro entregas de 1 kg e as taxas que elas geram; `docker compose down -v` volta aos dados de exemplo.
 
 O GitHub roda essa mesma suíte a cada push: veja a aba **Actions** do repositório. A decisão está em `docs/adr/011-a-suite-roda-a-cada-push.md`. O que já tem teste e o que ainda falta está em `docs/plano-de-testes.md`.
 
