@@ -1,8 +1,8 @@
-# Demo com dois tenants — CampoConta
+# Demo com dois tenants no CampoConta
 
-Entregável 4.3 da Etapa 4: o fluxo completo, com as duas cooperativas, ao vivo. Na defesa, a demo tem 3 minutos. **Copie o formato, não o conteúdo:** o fluxo do seu produto é outro.
+Entregável 4.3 da Etapa 4: o fluxo completo, com as duas cooperativas, ao vivo, em 3 minutos. **Copie o formato, não o conteúdo:** o fluxo do seu produto é outro. No seu PI, faça uma linha por passo do seu fluxo, e tire a resposta esperada de uma execução real, do zero.
 
-O que a banca precisa ver acontecer, não ouvir: **A cria e B não vê; B cria e A não vê.**
+A banca precisa ver, não ouvir: **A cria e B não vê; B cria e A não vê.**
 
 ## Antes de começar
 
@@ -23,9 +23,11 @@ $A = "Authorization: Bearer tok-alvorada"
 $B = "Authorization: Bearer tok-burica"
 ```
 
-Para mostrar A e B ao mesmo tempo, abra dois terminais lado a lado e cole as duas linhas nos dois.
+Para mostrar A e B ao mesmo tempo, abra dois terminais lado a lado, com as duas linhas em cada um.
 
 ## O roteiro
+
+Rode os passos na ordem: os números de entrega de cada passo dependem dos anteriores.
 
 | # | O que mostrar | Comando | Resposta esperada |
 |---|---|---|---|
@@ -41,9 +43,11 @@ Para mostrar A e B ao mesmo tempo, abra dois terminais lado a lado e cole as dua
 | 10 | B tenta se passar por A | `curl.exe -H "$B" -H "x-tenant-id: alvorada" http://localhost:8080/entregas` | as entregas `2` e `4`, da Buricá: o cabeçalho forjado não muda o tenant |
 | 11 | A regra do negócio segura | `curl.exe -X POST -H "$A" "http://localhost:8080/entregas?associado=A-023&kg=7000"` | `entrega estoura a cota do associado (7000 > 6000 kg)` (422) |
 
-No passo 8, a taxa pode levar meio segundo para aparecer: a entrega chega à cobrança por evento, e o relay confere a fila a cada 0,5 s (ADR 004). Se `/taxas` ainda não mostrar a entrega nova, espere e repita. Esse atraso é a consistência eventual, e vale dizer isso à banca.
+No passo 8, a taxa pode levar meio segundo: a entrega chega à cobrança por evento, e o relay, o laço que entrega os eventos, confere a fila a cada 0,5 s (ADR 004). Se `/taxas` não mostrar a entrega nova, repita. O atraso é a consistência eventual; diga isso à banca.
 
 ## O que cada passo prova
+
+Os arquivos citados ficam em `docs/`; os ADRs, em `docs/adr/`.
 
 - **Passos 1 a 7:** o isolamento, nos dois sentidos. O tenant vem do token (ADR 001), e o banco só devolve as linhas do tenant da vez (ADR 002).
 - **Passos 8 e 9:** o fluxo completo atravessa os três serviços: o gateway, a produção e a cobrança (`c4.md`, nível 2).
@@ -58,6 +62,6 @@ No passo 8, a taxa pode levar meio segundo para aparecer: a entrega chega à cob
 | `entrega_id` diferente de 3 | O sistema não estava zerado. Siga com os números que apareceram, ou rode o `down -v` |
 | Conexão recusada | `docker compose ps`; se faltar um serviço, `docker compose up -d` |
 
-Reserva: grave a demo em vídeo antes da defesa e avise o professor que vai usá-lo. Vídeo sem aviso prévio não conta como demo ao vivo.
+Reserva: grave a demo em vídeo e avise o professor antes da defesa. Vídeo sem aviso prévio não conta como demo ao vivo.
 
 **Conferido em 25/11/2026**, do zero, com os comandos desta página: as respostas da tabela são as que o sistema deu.
