@@ -48,6 +48,26 @@ O fixo por tenant cai de R$ 34,45 para R$ 14,80. O variável acompanha a receita
 
 **A decisão de tenancy aparece na tabela.** Em pool, um banco serve todos, e o custo por tenant cai com a escala. Em silo, cada cooperativa teria o seu banco: R$ 398 × 40 = R$ 15.920 só de banco, mais do que a receita inteira. Por isso o silo fica como plano pago à parte (ADR 002): quem pede banco próprio paga o custo de operá-lo.
 
+## Benchmark: São Paulo × us-central1
+
+A mesma conta, com o banco cotado nas duas regiões da referência (seção 3). As outras linhas ficam iguais, e a coluna "Por quê" diz o motivo de cada uma.
+
+| Linha | São Paulo (R$/mês) | us-central1 (R$/mês) | Por quê |
+|---|---|---|---|
+| Banco, 40 tenants (configuração A) | 398 | 265,36 | Calculado com a tabela 3.2, coluna us-central1: 1 × 0,0413 × 730 + 3,75 × 0,007 × 730 + 10 × 0,000232877 × 730 + 10 × 0,000109589 × 730 = US$ 51,81 × 5,1217. A mesma conta, para a configuração B, dá os R$ 530,73 que a referência traz pronto |
+| Banco, 120 tenants (configuração B) | 796 | 530,73 | Referência, seção 3.4 |
+| Aplicação (compute) | 780 | de 557,14 a 780 | É valor de aula, sem a parte de CPU, de memória e de requisição. O prêmio de 1,4× do Cloud Run incide só em CPU e memória (seção 3.1). Se os 780 fossem só CPU e memória, us-central1 custaria 780 ÷ 1,4 = 557,14. Como há requisição, que custa igual, o valor real fica entre os dois |
+| Tráfego de saída | 60 | 60 | É cobrado pelo destino, e o destino é o mesmo: as cooperativas, na América do Sul (seção 3.3) |
+| Storage, e-mail e gateway de pagamento | 95 + 45 + 532 | 95 + 45 + 532 | Premissas sem região |
+
+| | São Paulo | us-central1 |
+|---|---|---|
+| Custo por tenant, 40 tenants | R$ 47,75 | de R$ 38,86 (1.554,50 ÷ 40) a R$ 44,43 (1.777,36 ÷ 40) |
+| Custo por tenant, 120 tenants | R$ 28,10 | de R$ 24,03 (2.883,87 ÷ 120) a R$ 25,89 (3.106,73 ÷ 120) |
+| Margem bruta, 40 tenants | 87,4% | de 88,3% a 89,8% |
+
+**A decisão: o CampoConta fica em São Paulo.** Ir para os EUA economiza de R$ 3,32 a R$ 8,89 por cooperativa por mês, de 7% a 19% do custo. Em troca, o código e o peso entregue de cada associado, que são dados pessoais (`lgpd.md`), passam a ficar fora do país. Quem decide sobre esses dados é cada cooperativa, a controladora deles (`lgpd.md`, "Papéis"). Para defender os EUA, faltaria a regra da LGPD sobre dado pessoal no exterior: [FALTA: fonte datada].
+
 ## Cobrança
 
 1. **Modelo:** assinatura, R$ 380 por cooperativa por mês.
@@ -65,4 +85,5 @@ PREMISSA 3: banco = Cloud SQL PostgreSQL Enterprise, southamerica-east1, 1 vCPU,
             COTAÇÃO EQUIVALENTE (rodamos local)
 PREMISSA 4: 60 entregas por cooperativa por mês (2.400 no total); estimativa
 PREMISSA 5: a configuração A não comporta 120 tenants no pool; estimativa, sem medição
+PREMISSA 6: no benchmark, a linha de compute vai de 557,14 (só CPU e memória, ÷ 1,4) a 780 (sem prêmio); o valor de aula não separa CPU, memória e requisição
 ```

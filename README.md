@@ -36,9 +36,9 @@ Pare aqui. O resto se faz no encontro, com `aula/enc11/experimentos.md`: quem ro
 | `compose.yaml`, `Dockerfile` | O ambiente que sobe tudo |
 | `ferramentas/` | Scripts do laboratório (não fazem parte do produto) |
 | `aula/` | Material dos encontros, uma pasta por encontro (não faz parte do produto) |
-| `testes/` | A suíte de testes. Hoje, um teste: o de isolamento entre as duas cooperativas |
+| `testes/` | A suíte com o sistema no ar: isolamento, integração, fila, autorização e robustez. Os testes de unidade ficam em `producao/testes/` |
 | `.github/workflows/` | O pipeline: roda a suíte a cada push, numa máquina limpa do GitHub |
-| `docs/` | Documentação de arquitetura: visão, C4, mapa de contextos, ADRs, LGPD e declaração de uso de IA. É o exemplo do que as Etapas 1 e 2 pedem; comece por `docs/README.md` |
+| `docs/` | Documentação de arquitetura: visão, C4, mapa de contextos, ADRs, LGPD, SLO, carga, segurança, custo, demo e declaração de uso de IA. É o exemplo do que as quatro Etapas pedem; comece por `docs/README.md` |
 
 ## O desenho
 
@@ -65,7 +65,7 @@ Pare aqui. O resto se faz no encontro, com `aula/enc11/experimentos.md`: quem ro
 | **cobranca** | Recebe o evento e gera a taxa (R$ 0,05 por kg). Ignora evento repetido | `cobranca/server.js` |
 | **bancos** | Tabelas, trava de isolamento por tenant e dados de exemplo | `producao/init.sql`, `cobranca/init.sql` |
 
-São cerca de 550 linhas ao todo, contando comentários e SQL. Dá para ler tudo em uma hora.
+São cerca de 650 linhas ao todo, contando comentários e SQL. Dá para ler tudo em uma hora.
 
 ## Termos que você vai ver aqui
 
@@ -134,8 +134,12 @@ Para testar outro número sem editar nada, no PowerShell: `$env:MAX_PESADAS = "2
 - **Login de verdade.** O token é fixo.
 - **Broker de mensagens.** A fila é uma tabela (a `outbox`), porque há um produtor e um consumidor. Quando trocar a tabela por um broker é decisão de arquitetura, discutida em `aula/enc11/o-que-e-microsservico.md`. Operar um broker gerenciado é assunto de Cloud Computing.
 - **Os contextos Associados e Relatórios** do mapa do Encontro 08. Dois serviços de domínio bastam para mostrar a conversa.
-- **A suíte completa.** Há testes de unidade da cota e três arquivos de teste com o sistema no ar, e o pipeline que os roda (seção "Rodar os testes"). Teste de unidade, de contrato e de segurança entram na Unidade 4, sobre este mesmo sistema.
+- **A suíte completa.** Há testes de unidade da cota, cinco arquivos de teste com o sistema no ar e o pipeline que os roda (seção "Rodar os testes"). Ainda faltam a regra da taxa, o contrato do evento e o evento forjado: a lista está em `docs/plano-de-testes.md`.
 - **Kubernetes.** O Compose é só a bancada.
+
+## Demo com as duas cooperativas
+
+O roteiro da demo da Etapa 4 está em `docs/demo.md`: onze comandos, do sistema zerado ao isolamento mostrado nos dois sentidos. A Alvorada registra uma entrega e a Buricá não a vê; a Buricá registra outra e a Alvorada não a vê. Na defesa, a demo tem 3 minutos.
 
 ## Rodar os testes
 
@@ -147,13 +151,13 @@ A suíte tem dois andares.
 node --test "producao/testes/*.test.js"
 ```
 
-**Com o sistema no ar:** três arquivos. O de isolamento confere que uma cooperativa não vê a entrega da outra. O de integração desliga uma defesa de cada vez e confere que a outra segura: a política do banco sem o filtro do código, e a cobrança recebendo o mesmo evento duas vezes. O da fila confere que o pedido acima do limite espera em vez de falhar. O esperado é `pass 10`, em cerca de 12 segundos.
+**Com o sistema no ar:** cinco arquivos. O de isolamento confere que uma cooperativa não vê a entrega da outra. O de integração desliga uma defesa de cada vez e confere que a outra segura: a política do banco sem o filtro do código, e a cobrança recebendo o mesmo evento duas vezes. O da fila confere que o pedido acima do limite espera em vez de falhar. O de autorização confere que toda rota recusa o pedido sem token válido e que o cabeçalho de tenant forjado não muda o tenant. O de robustez confere que um endereço malformado recebe 400 e o gateway continua no ar. O esperado é `pass 33`, em cerca de 12 segundos.
 
 ```powershell
 node --test --test-concurrency=1 "testes/*.test.js"
 ```
 
-O `--test-concurrency=1` roda um arquivo de teste por vez. Sem ele, os dois arquivos rodam juntos e um enche a fila que o outro está medindo.
+O `--test-concurrency=1` roda um arquivo de teste por vez. Sem ele, os arquivos rodam juntos e um enche a fila que o outro está medindo.
 
 Não tem o Node 22 instalado? Rode por dentro do Compose, só com o Docker:
 
