@@ -27,7 +27,7 @@ Esta pasta é o exemplo do que a sua unidade de PI entrega nas Etapas 1, 2 e 3, 
 | 3 | Gatilho de revisão num ADR (26/11) | `adr/002`, seção "Gatilho de revisão" |
 | 4 | 4.2 Repositório final: tag ou release, README completo | o `README.md` da raiz e a release `etapa-4`, na página **Releases** do repositório |
 | 4 | 4.3 Demo com 2 tenants, isolamento nos dois sentidos | `demo.md` |
-| 4 | 4.4 Custo com memória de cálculo (rascunho de 26/11) | `custo-por-tenant.md` |
+| 4 | 4.4 Custo com memória de cálculo e benchmark São Paulo × us-central1 | `custo-por-tenant.md` |
 
 A `especificacao.md` não é cobrada; mostra como descrever o que o sistema promete antes de mudá-lo.
 
