@@ -17,14 +17,16 @@ Cada arquivo registra uma decisão no formato do Encontro 02: **contexto** (com 
 | [011](011-a-suite-roda-a-cada-push.md) | A suíte roda a cada push, numa máquina limpa | 3.1 (suíte no pipeline) |
 | [012](012-fila-com-teto-e-duas-faixas-no-gateway.md) | O excedente espera numa fila com teto, em duas faixas por tenant. Decisão revista com medição | 3.3 e 3.4 (carga e meta), e o nível Excelente de "Carga e SLO": gargalo com hipótese de correção |
 
-Os ADRs 001 a 010 descrevem o código do produto como ele era no commit `0deac2a`. O ADR 011 é o primeiro escrito no dia da decisão. O ADR 012 é o primeiro que muda o código do produto e o primeiro que substitui outro (o 008). O produto está sendo redesenhado; as decisões novas entram aqui como ADRs novos, no dia em que forem tomadas e depois de lidas por alguém de fora. Nenhum dos ADRs 001 a 010 será apagado: o que for revisto ganha o status "substituído pelo ADR tal". Um ADR alterado depois de escrito diz isso na linha **Histórico**, no fim do arquivo.
+Os ADRs 001 a 010 descrevem o código como ele era no commit `0deac2a`. O 011 é o primeiro escrito no dia da decisão. O 012 é o primeiro que muda o código e o primeiro que substitui outro (o 008).
+
+Decisão nova entra como ADR novo, no dia em que é tomada. Nenhum ADR é apagado: o revisto ganha o status "substituído pelo ADR tal". O ADR alterado depois de escrito diz isso na linha **Histórico**, no fim do arquivo.
 
 ## Uma confissão, que também é lição
 
-O Encontro 02 diz que um ADR honesto é **escrito no momento da decisão**. Estes não foram: o código ficou pronto em 10/10/2026 e os ADRs foram registrados em 15/10/2026, depois de o sistema ter sido revisado. Cada um diz isso no campo **Status**.
+O Encontro 02 diz que o ADR honesto é **escrito no momento da decisão**. Estes não foram: o código ficou pronto em 10/10/2026, e os ADRs, em 15/10/2026, depois da revisão do sistema. Cada um diz isso no campo **Status**.
 
-O custo apareceu: ao escrever as alternativas descartadas, algumas decisões se mostraram mais frágeis do que pareciam (ver o ADR 010). Se tivessem sido escritas antes, uma parte desses defeitos não teria entrado no código. No seu PI, escreva o ADR **quando** decidir.
+O custo apareceu: ao escrever as alternativas descartadas, algumas decisões se mostraram frágeis (ADR 010). Escritas antes, parte desses defeitos não teria entrado no código. No seu PI, escreva o ADR **quando** decidir.
 
 ## Isto não é o seu PI
 
-Estes ADRs são do CampoConta, que é material de aula. Copiar uma decisão daqui sem o contexto do seu produto é avaliado como cópia. Use o formato; a decisão é sua.
+Estes ADRs são material de aula. Copiar uma decisão daqui sem o contexto do seu produto é avaliado como cópia. Use o formato; a decisão é sua.

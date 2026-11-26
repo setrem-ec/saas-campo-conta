@@ -1,6 +1,6 @@
 # Documentação de arquitetura do CampoConta
 
-Esta pasta é o exemplo do que a sua unidade de PI entrega nas Etapas 1, 2 e 3, e da maior parte da Etapa 4, feito para o CampoConta. **Copie o formato, não o conteúdo:** o seu produto tem outro problema, outros números e outras decisões. Copiar uma decisão daqui sem o contexto do seu produto é avaliado como cópia de material de aula.
+O que a sua unidade de PI entrega nas quatro Etapas, feito para o CampoConta. **Copie o formato, não o conteúdo:** o seu produto tem outro problema, outros números e outras decisões. Copiar uma decisão daqui sem o contexto do seu produto é avaliado como cópia.
 
 ## O que o seu repositório precisa ter, e o exemplo de cada item
 
@@ -29,11 +29,11 @@ Esta pasta é o exemplo do que a sua unidade de PI entrega nas Etapas 1, 2 e 3, 
 | 4 | 4.3 Demo com 2 tenants, isolamento nos dois sentidos | `demo.md` |
 | 4 | 4.4 Custo com memória de cálculo e benchmark São Paulo × us-central1 | `custo-por-tenant.md` |
 
-A `especificacao.md` não é cobrada; mostra como descrever o que o sistema promete antes de mudá-lo.
+A `especificacao.md` não é cobrada: mostra como descrever o que o sistema promete antes de mudá-lo.
 
 ## Se você tem uma hora
 
-Leia nesta ordem: `adr/README.md`, `adr/002` (tenancy), `adr/004` (comunicação) e `mapa-contextos.md`. São os quatro que a defesa da Etapa 2 mais pergunta.
+Leia `adr/README.md`, `adr/002` (tenancy), `adr/004` (comunicação) e `mapa-contextos.md`, nesta ordem. São os que a defesa da Etapa 2 mais pergunta.
 
 ## Os seis experimentos, que os documentos citam
 
@@ -48,12 +48,11 @@ Leia nesta ordem: `adr/README.md`, `adr/002` (tenancy), `adr/004` (comunicação
 
 ## Termos que aparecem aqui
 
-- **RLS (segurança por linha):** regra dentro do banco que só devolve as linhas do tenant da vez, mesmo que o código peça todas.
-- **Outbox:** tabela onde o serviço grava o aviso ("evento") na mesma transação do dado, para o aviso não se perder.
-- **Relay:** laço que lê a outbox e entrega cada evento ao outro serviço.
-- **Recuo crescente:** depois de uma falha, esperar mais a cada nova tentativa (0,5 s, 1 s, 2 s…), para não martelar quem está fora do ar.
-- **Consistência eventual:** o dado fica certo em todos os lugares, mas não no mesmo instante. A taxa aparece instantes depois da entrega.
+RLS, outbox e relay estão no `README.md` da raiz, seção "Termos que você vai ver aqui".
+
+- **Recuo crescente:** depois de cada falha, esperar mais antes de tentar de novo (0,5 s, 1 s, 2 s…), para não martelar quem está fora do ar.
+- **Consistência eventual:** o dado fica certo em todos os lugares, mas não no mesmo instante: a taxa aparece pouco depois da entrega.
 - **Idempotência:** receber a mesma mensagem duas vezes tem o mesmo efeito que receber uma.
-- **Saga:** sequência de passos em serviços diferentes em que, se um falha, os anteriores são desfeitos por uma ação de compensação.
-- **Cliente-fornecedor / conformista:** tipos de relação entre contextos (Encontro 08). No primeiro, quem consome negocia o contrato; no segundo, aceita o formato do outro como está.
+- **Saga:** passos em serviços diferentes; se um falha, uma ação de compensação desfaz os anteriores.
+- **Cliente-fornecedor / conformista:** relações entre contextos (Encontro 08). Na primeira, quem consome negocia o contrato; na segunda, aceita o formato do outro.
 - **Defeito C1, C2…:** numeração da lista de defeitos conhecidos, no `adr/010`.
