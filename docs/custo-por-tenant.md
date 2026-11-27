@@ -68,7 +68,29 @@ A mesma conta, com o banco cotado nas duas regiões da referência (seção 3). 
 | Custo por tenant, 120 tenants | R$ 36,59 | de R$ 29,70 (3.563,85 ÷ 120) a R$ 31,56 (3.786,71 ÷ 120) |
 | Margem bruta, 40 tenants | 84,1% | de 86,1% a 87,5% |
 
-**A decisão: o CampoConta fica em São Paulo.** Ir para os EUA economiza de R$ 7,55 a R$ 13,12 por cooperativa por mês, de 12% a 22% do custo. Em troca, o código e o peso entregue de cada associado, dados pessoais (`lgpd.md`), passam a ficar fora do país. Quem decide sobre eles é cada cooperativa, a controladora (`lgpd.md`, "Papéis"). Para defender os EUA, faltaria a regra da LGPD sobre dado pessoal no exterior: [FALTA: fonte datada].
+**A decisão: o CampoConta fica em São Paulo.** Ir para os EUA economiza de R$ 7,55 a R$ 13,12 por cooperativa por mês, de 12% a 22% do custo. Em troca, o código e o peso entregue de cada associado, dados pessoais (`lgpd.md`), passam a ficar fora do país. Quem decide sobre eles é cada cooperativa, a controladora (`lgpd.md`, "Papéis"). Para defender os EUA, a transferência teria de caber num dos casos do art. 33 da LGPD: "A transferência internacional de dados pessoais somente é permitida nos seguintes casos". Dois exemplos da lista: país com "grau de proteção de dados pessoais adequado" (inciso I) e "cláusulas-padrão contratuais" (inciso II, b). Fonte: Lei nº 13.709/2018, texto compilado em planalto.gov.br, acesso em 27/11/2026.
+
+## Item opcional: uma parte em função
+
+Esta seção é um cenário. A tabela de decomposição não muda.
+
+**O que vai para a função:** o relatório do fechamento de safra, que tem pico curto e sazonal. Ficam no servidor as cotas (as balanças consultam o tempo todo na safra), o gateway com a fila por cooperativa (ADR 012) e o outbox.
+
+| | R$ |
+|---|---|
+| Um relatório (0,5 s com 1 vCPU e 1 GiB, mais a requisição) | 0,000111 |
+| 100 mil relatórios por mês, sem franquia | 11,15 |
+
+Conta: 0,5 × (0,00019765 + 0,00002059) + 0,000002353 = R$ 0,000111. Preços da referência, seção 3.1 (Cloud Run, São Paulo, 25/11/2026). O 0,5 s é a espera simulada do relatório (`carga-enc14.md`).
+
+A função só mexe na linha de aplicação, R$ 780, que é 32% da conta. Banco, gateway de pagamento, storage, tráfego e e-mail ficam iguais. Quanto dos 780 existe só para aguentar o pico do relatório não foi medido. Com uma premissa de 25%:
+
+1. **Sai do servidor:** 25% × 780 = R$ 195.
+2. **Entra a função:** R$ 11,15.
+3. **Total:** 2.420 − 195 + 11,15 = R$ 2.236,15.
+4. **Custo por tenant:** 2.236,15 ÷ 40 = R$ 55,90, R$ 4,60 a menos. Margem bruta de 85,3%.
+
+**O que a fatura não mostra.** Mil relatórios em paralelo abrem mil conexões no banco, e o teto de 8 relatórios por cooperativa do ADR 012 deixa de valer na função. Seria preciso um pooler de conexões: [FALTA: preço].
 
 ## Cobrança
 
@@ -90,5 +112,8 @@ PREMISSA 4: 60 entregas por cooperativa por mês (2.400 no total); estimativa
 PREMISSA 5: a configuração A não comporta 120 tenants no pool; estimativa, sem medição
 PREMISSA 6: no benchmark, a linha de compute vai de 557,14 (só CPU e memória, ÷ 1,4) a 780 (sem prêmio); o valor de aula não separa CPU, memória e requisição
 PREMISSA 7: no benchmark, SSD, SSD em HA e backup de us-central1 conferidos em 26/11/2026 (cloud.google.com/sql/pricing)
-PREMISSA 8: o banco em HA é decisão do dono do produto (26/11/2026); a meta de disponibilidade que o justifica ainda não existe: [FALTA: meta de disponibilidade em slo.md]
+PREMISSA 8: o banco em HA é decisão do dono do produto (26/11/2026), pela meta de disponibilidade
+            de 99,9% ao mês (até 43,2 min fora do ar em 30 dias), dita em 27/11/2026 (slo.md)
+PREMISSA 9: na parte em função, 100 mil relatórios por mês, 0,5 s cada, com 1 vCPU e 1 GiB, sem franquia; volume estimado
+PREMISSA 10: na parte em função, 25% dos R$ 780 de aplicação existem só para o pico do relatório; arbitrado, sem medição
 ```
